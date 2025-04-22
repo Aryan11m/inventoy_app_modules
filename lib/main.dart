@@ -1,6 +1,8 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:inventory_app/login1.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/page.dart';
@@ -9,7 +11,9 @@ import 'package:inventory_app/star.dart';
 
 dynamic height, width;
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(class.Adapter());
   runApp(MyApp());
 }
 
