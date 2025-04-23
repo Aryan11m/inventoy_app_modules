@@ -61,7 +61,6 @@ class _LoginPageState extends State<LoginPage> {
       authBox.put('isLoggedIn', true);
       authBox.put('userEmail', email);
       authBox.put('userRole', selectedRole);
-      authBox.put('rememberMe', isChecked);
       authBox.put('lastLoginTime', now.toString());
 
       Get.off(() => const MyHomePage());

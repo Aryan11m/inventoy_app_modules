@@ -44,7 +44,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // Set the user as logged out
     final authBox = Hive.box('authBox');
     authBox.put('isLoggedIn', false);
-    authBox.put('rememberMe', false);
 
     // Navigate to login page
     Get.offAll(() => const LoginPage());
@@ -138,6 +137,38 @@ class _MyHomePageState extends State<MyHomePage> {
                   pageToNavigate: StarPage(),
                 ),
                 SizedBox(width: 10),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(Icons.star),
+                    Icon(Icons.star),
+                    Icon(Icons.star),
+                  ],
+                ),
+
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(Icons.star),
+                    Icon(Icons.star),
+                    Icon(Icons.star),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(Icons.star),
+                    Icon(Icons.star),
+                    Icon(Icons.star),
+                  ],
+                ),
               ],
             ),
           ),
