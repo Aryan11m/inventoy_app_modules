@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive/hive.dart';
 import 'package:inventory_app/page.dart';
 import 'package:inventory_app/main.dart';
 
@@ -12,8 +14,36 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKeys = GlobalKey<FormState>();
+  bool isChecked = false;
+
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  // late Box forlog1;
+  late Box authBox;
+
+  @override
+  void initState() {
+    super.initState();
+    createBox();
+  }
+
+  void createBox() async {
+    // forlog1 = await Hive.openBox('logindata');
+    authBox = await Hive.openBox('authBox');
+    getData();
+  }
+
+  void getData() async {
+    if (authBox.get('email') != null) {
+      emailController.text = authBox.get('email');
+      isChecked = true; // If email exists, "Remember Me" was checked
+      setState(() {});
+    }
+    if (authBox.get('password') != null) {
+      passwordController.text = authBox.get('password');
+    }
+  }
 
   String selectedRole = 'User';
   final List<String> roles = ['User', 'Manager', 'Admin'];
@@ -22,10 +52,19 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKeys.currentState!.validate()) {
       String email = emailController.text;
       String password = passwordController.text;
-
-      Get.off(MyHomePage());
-
       final now = DateTime.now();
+
+      // Save login credentials if "Remember Me" is checked
+      login1();
+
+      // Always set the user as logged in when successfully logging in
+      authBox.put('isLoggedIn', true);
+      authBox.put('userEmail', email);
+      authBox.put('userRole', selectedRole);
+      authBox.put('rememberMe', isChecked);
+      authBox.put('lastLoginTime', now.toString());
+
+      Get.off(() => const MyHomePage());
 
       print('Role: $selectedRole');
       print('Email: $email');
@@ -96,7 +135,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 24),
-
                 TextFormField(
                   controller: passwordController,
                   obscureText: true,
@@ -106,22 +144,34 @@ class _LoginPageState extends State<LoginPage> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-                const SizedBox(height: 24),
-
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Remember Me',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                    Checkbox(
+                      value: isChecked,
+                      onChanged: (value) {
+                        setState(() {
+                          isChecked = !isChecked;
+                        });
+                      },
+                    ),
+                  ],
+                ),
                 ElevatedButton(
                   onPressed: login,
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 43, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 43,
+                      vertical: 10,
+                    ),
                     backgroundColor: Colors.blueGrey[300],
                   ),
                   child: const Text('login'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Get.toNamed('/Home');
-                  },
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                  child: const Text('Logout'),
                 ),
               ],
             ),
@@ -129,5 +179,17 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  void login1() {
+    if (isChecked) {
+      // Save email and password if "Remember Me" is checked
+      authBox.put('email', emailController.text);
+      authBox.put('password', passwordController.text);
+    } else {
+      // Clear saved credentials if "Remember Me" is unchecked
+      authBox.delete('email');
+      authBox.delete('password');
+    }
   }
 }

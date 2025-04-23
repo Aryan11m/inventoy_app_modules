@@ -13,8 +13,16 @@ dynamic height, width;
 
 void main() async {
   await Hive.initFlutter();
-  Hive.registerAdapter(class.Adapter());
-  runApp(MyApp());
+  await Hive.openBox('logindata');
+  // Add a new authentication box for storing login state
+  await Hive.openBox('authBox');
+  runApp(const MyApp());
+}
+
+class Roles {
+  final String emailid;
+  final String srole;
+  const Roles(this.emailid, this.srole);
 }
 
 class MyApp extends StatelessWidget {
@@ -25,7 +33,6 @@ class MyApp extends StatelessWidget {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return GetMaterialApp(
-      // initialRoute: SplashScreen(),
       getPages: [
         GetPage(name: '/Home', page: () => MyHomePage()),
         GetPage(name: '/Login', page: () => LoginPage()),

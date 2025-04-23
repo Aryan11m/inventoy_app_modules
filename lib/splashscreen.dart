@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:inventory_app/login1.dart';
+import 'package:inventory_app/page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -16,9 +18,25 @@ class _SplashscreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Timer(Duration(seconds: 3), () {
-      Get.off(LoginPage());
+    Timer(const Duration(seconds: 3), () {
+      checkLoginStatus();
     });
+  }
+
+  void checkLoginStatus() async {
+    // Get the auth box for checking login status
+    final authBox = Hive.box('authBox');
+
+    // Check if user is logged in
+    final isLoggedIn = authBox.get('isLoggedIn', defaultValue: false);
+
+    if (isLoggedIn) {
+      // User is logged in, navigate to home page
+      Get.off(() => const MyHomePage());
+    } else {
+      // User is not logged in, navigate to login page
+      Get.off(() => const LoginPage());
+    }
   }
 
   @override
@@ -26,7 +44,7 @@ class _SplashscreenState extends State<SplashScreen> {
     return Scaffold(
       body: Container(
         color: Colors.blue,
-        child: Center(
+        child: const Center(
           child: Text(
             'Invento',
             style: TextStyle(

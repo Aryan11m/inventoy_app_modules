@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:hive/hive.dart';
 import 'package:inventory_app/login1.dart';
 import 'package:inventory_app/main.dart';
 import 'package:inventory_app/cards.dart';
@@ -15,11 +16,38 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final SearchController controller = SearchController();
+  String userName = "";
+  String userRole = "";
 
   int _selectedIndex = 0;
 
-  void homePage1() {
-    Get.offAll(LoginPage());
+  @override
+  void initState() {
+    super.initState();
+    // Load user info from Hive
+    getUserInfo();
+  }
+
+  void getUserInfo() async {
+    final authBox = Hive.box('authBox');
+    final email = authBox.get('userEmail', defaultValue: "User");
+    final role = authBox.get('userRole', defaultValue: "");
+
+    setState(() {
+      userName =
+          email.toString().split('@')[0]; // Use the part before @ as name
+      userRole = role;
+    });
+  }
+
+  void logout() {
+    // Set the user as logged out
+    final authBox = Hive.box('authBox');
+    authBox.put('isLoggedIn', false);
+    authBox.put('rememberMe', false);
+
+    // Navigate to login page
+    Get.offAll(() => const LoginPage());
   }
 
   static const TextStyle optionStyle = TextStyle(
@@ -44,8 +72,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Hello ....',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          'Hello $userName ($userRole)',
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
@@ -70,13 +98,12 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const SizedBox(height: 10),
-
           const Text(
             ' Products',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           SizedBox(
-            height: height * 0.15, // Adjust based on your card height
+            height: height * 0.15,
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: const [
@@ -114,23 +141,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
-
-          // Expanded(child: SizedBox(height: 10)),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: [
-          //     OutlinedButton(
-          //       onPressed: () {
-          //         Navigator.pushReplacement(
-          //           context,
-          //           MaterialPageRoute(builder: (context) => const LoginPage()),
-          //         );
-          //       },
-          //       style: OutlinedButton.styleFrom(backgroundColor: Colors.blue),
-          //       child: Text('Logout'),
-          //     ),
-          //   ],
-          // ),
         ],
       ),
       drawer: Drawer(
@@ -138,9 +148,29 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: BoxDecoration(color: Colors.amber),
-
-              child: Text('Drawer Header', textAlign: TextAlign.center),
+              decoration: const BoxDecoration(color: Colors.amber),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Welcome, $userName',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text('Role: $userRole'),
+                  const Spacer(),
+                  ElevatedButton(
+                    onPressed: logout,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                    ),
+                    child: const Text('Logout'),
+                  ),
+                ],
+              ),
             ),
             ListTile(
               title: const Text('Home'),
@@ -164,8 +194,6 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 _onItemTapped(2);
                 Get.back();
-
-                // Navigator.pop(context);
               },
             ),
           ],
@@ -182,13 +210,16 @@ class _MyHomePageState extends State<MyHomePage> {
             gap: 8,
             onTabChange: (index) {
               print(index);
+              if (index == 0) {
+                logout();
+              }
             },
-            padding: EdgeInsets.all(16),
-            tabs: [
-              GButton(icon: Icons.logout, text: 'Logout', onPressed: homePage1),
-              const GButton(icon: Icons.favorite_border, text: 'Likes'),
-              const GButton(icon: Icons.search, text: 'Search'),
-              const GButton(icon: Icons.settings, text: 'Settings'),
+            padding: const EdgeInsets.all(16),
+            tabs: const [
+              GButton(icon: Icons.logout, text: 'Logout'),
+              GButton(icon: Icons.favorite_border, text: 'Likes'),
+              GButton(icon: Icons.search, text: 'Search'),
+              GButton(icon: Icons.settings, text: 'Settings'),
             ],
           ),
         ),
