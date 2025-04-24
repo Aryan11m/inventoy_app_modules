@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
             height: height * 0.15,
             child: ListView(
               scrollDirection: Axis.horizontal,
-              children: const [
+              children: [
                 SizedBox(width: 10),
                 ReusableCircleCard(
                   icon: Icons.star,
@@ -136,44 +136,115 @@ class _MyHomePageState extends State<MyHomePage> {
                   label: 'chart2',
                   pageToNavigate: StarPage(),
                 ),
-                SizedBox(width: 10),
               ],
             ),
           ),
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+          SizedBox(height: 10),
+          Flexible(
+            child: ListView(
+              scrollDirection: Axis.vertical,
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Icon(Icons.star),
-                    Icon(Icons.star),
-                    Icon(Icons.star),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "To Do List",
+                    style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
+                  ),
                 ),
-
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Icon(Icons.star),
-                    Icon(Icons.star),
-                    Icon(Icons.star),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(title: Text('1) First Task')),
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Icon(Icons.star),
-                    Icon(Icons.star),
-                    Icon(Icons.star),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(title: Text('2) Second Task')),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(title: Text('3) Third Task')),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(title: Text('4) Fourth Task')),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(title: Text('4) Fourth Task')),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(title: Text('4) Fourth Task')),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(title: Text('4) Fourth Task')),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(title: Text('4) Fourth Task')),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(title: Text('4) Fourth Task')),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(title: Text('4) Fourth Task')),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(title: Text('4) Fourth Task')),
                 ),
               ],
             ),
           ),
+
+          // SizedBox(
+          //   height: height * 0.65,
+          //   child: ListView(
+          //     scrollDirection: Axis.vertical,
+          //     children: [
+          //       ReusableCircleCard(
+          //         icon: Icons.shopping_cart,
+          //         label: 'Product',
+          //         pageToNavigate: StarPage(),
+          //       ),
+          //       SizedBox(width: 10),
+          //       ReusableCircleCard(
+          //         icon: Icons.star,
+          //         label: 'star',
+          //         pageToNavigate: StarPage(),
+          //       ),
+          //       SizedBox(width: 10),
+          //       ReusableCircleCard(
+          //         icon: Icons.star,
+          //         label: 'star',
+          //         pageToNavigate: StarPage(),
+          //       ),
+          //       SizedBox(width: 10),
+          //       ReusableCircleCard(
+          //         icon: Icons.contact_emergency,
+          //         label: 'contact',
+          //         pageToNavigate: StarPage(),
+          //       ),
+          //       SizedBox(width: 10),
+          //       ReusableCircleCard(
+          //         icon: Icons.stacked_line_chart_rounded,
+          //         label: 'chart1',
+          //         pageToNavigate: StarPage(),
+          //       ),
+          //       SizedBox(width: 10),
+          //       ReusableCircleCard(
+          //         icon: Icons.stacked_line_chart_rounded,
+          //         label: 'chart2',
+          //         pageToNavigate: StarPage(),
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
+
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -259,6 +330,69 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+// class MySearchDelegate extends SearchDelegate {
+//   List<String> searchResults = [
+//     'Product 1',
+//     'Product 2',
+//     'Product 3',
+//     'Product 4',
+//     'Product 5',
+//   ];
+//   @override
+//   Widget? buildLeading(BuildContext context) => IconButton(
+//     onPressed: () => close(context, null),
+//     icon: const Icon(Icons.arrow_back),
+//   );
+
+//   @override
+//   List<Widget>? buildActions(BuildContext context) => [
+//     IconButton(
+//       icon: const Icon(Icons.clear),
+//       onPressed: () {
+//         if (query.isEmpty) {
+//           close(context, null);
+//         } else {
+//           query = '';
+//         }
+//       },
+//     ),
+//   ];
+
+//   @override
+//   Widget buildResults(BuildContext context) => Center(
+//     child: Text(
+//       query,
+//       style: const TextStyle(fontSize: 64, fontWeight: FontWeight.bold),
+//     ),
+//   );
+
+//   @override
+//   Widget buildSuggestions(BuildContext context) {
+//     List<String> suggestions =
+//         searchResults.where((searchResult) {
+//           final result = searchResult.toLowerCase();
+//           final input = query.toLowerCase();
+
+//           return result.contains(input);
+//         }).toList();
+
+//     return ListView.builder(
+//       itemCount: suggestions.length,
+//       itemBuilder: (context, index) {
+//         final suggestion = suggestions[index];
+
+//         return ListTile(
+//           title: Text(suggestion),
+//           onTap: () {
+//             query = suggestion;
+
+//             showResults(context);
+//           },
+//         );
+//       },
+//     );
+//   }
+// }
 class MySearchDelegate extends SearchDelegate {
   List<String> searchResults = [
     'Product 1',
@@ -267,6 +401,7 @@ class MySearchDelegate extends SearchDelegate {
     'Product 4',
     'Product 5',
   ];
+
   @override
   Widget? buildLeading(BuildContext context) => IconButton(
     onPressed: () => close(context, null),
@@ -288,12 +423,58 @@ class MySearchDelegate extends SearchDelegate {
   ];
 
   @override
-  Widget buildResults(BuildContext context) => Center(
-    child: Text(
-      query,
-      style: const TextStyle(fontSize: 64, fontWeight: FontWeight.bold),
-    ),
-  );
+  Widget buildResults(BuildContext context) {
+    // Check if the query exactly matches any result
+    bool exactMatch = searchResults.any(
+      (result) => result.toLowerCase() == query.toLowerCase(),
+    );
+
+    // If there's no exact match, show "No results found"
+    if (!exactMatch) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.search_off, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            Text(
+              'No results found for "$query"',
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Try searching from available suggestions',
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // If we have an exact match, show the result
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.check_circle_outline, size: 64, color: Colors.green),
+          const SizedBox(height: 16),
+          Text(
+            query,
+            style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            'Product found!',
+            style: TextStyle(fontSize: 20, color: Colors.green),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget buildSuggestions(BuildContext context) {
@@ -301,24 +482,63 @@ class MySearchDelegate extends SearchDelegate {
         searchResults.where((searchResult) {
           final result = searchResult.toLowerCase();
           final input = query.toLowerCase();
-
           return result.contains(input);
         }).toList();
 
+    // Show "No suggestions found" when there are no matching suggestions
+    if (suggestions.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.search_off, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            Text(
+              'No suggestions found for "$query"',
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Show suggestions when we have matches
     return ListView.builder(
       itemCount: suggestions.length,
       itemBuilder: (context, index) {
         final suggestion = suggestions[index];
 
         return ListTile(
+          leading: const Icon(Icons.search),
           title: Text(suggestion),
           onTap: () {
             query = suggestion;
-
             showResults(context);
           },
         );
       },
     );
+  }
+
+  // Override this method to handle search submission
+  @override
+  void showResults(BuildContext context) {
+    // Check if the exact query matches any of our items before showing results
+    bool hasMatch = searchResults.any(
+      (result) => result.toLowerCase() == query.toLowerCase(),
+    );
+
+    // Only allow proceeding to results if there's an exact match
+    if (hasMatch) {
+      super.showResults(context);
+    } else {
+      // If not an exact match, we still show results screen but it will
+      // display "No results found" as implemented in buildResults
+      super.showResults(context);
+    }
   }
 }

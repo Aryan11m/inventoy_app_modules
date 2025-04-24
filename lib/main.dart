@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+// import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:inventory_app/login1.dart';
 import 'package:get/get.dart';
