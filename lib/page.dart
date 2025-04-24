@@ -74,14 +74,14 @@ class _MyHomePageState extends State<MyHomePage> {
           'Hello $userName ($userRole)',
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showSearch(context: context, delegate: MySearchDelegate());
-            },
-            icon: const Icon(Icons.search),
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {
+        //       showSearch(context: context, delegate: MySearchDelegate());
+        //     },
+        //     icon: const Icon(Icons.search),
+        //   ),
+        // ],
         leading: Builder(
           builder: (context) {
             return IconButton(
@@ -143,7 +143,16 @@ class _MyHomePageState extends State<MyHomePage> {
           Flexible(
             child: ListView(
               scrollDirection: Axis.vertical,
+
               children: [
+                IconButton(
+                  onPressed: () {
+                    showSearch(context: context, delegate: MySearchDelegate());
+                  },
+                  icon: const Icon(Icons.search),
+                  iconSize: 35,
+                ),
+
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
@@ -395,11 +404,11 @@ class _MyHomePageState extends State<MyHomePage> {
 // }
 class MySearchDelegate extends SearchDelegate {
   List<String> searchResults = [
-    'Product 1',
-    'Product 2',
-    'Product 3',
-    'Product 4',
-    'Product 5',
+    '1) First Task',
+    '2) Second Task',
+    '3) Third Task',
+    '4) Fourth Task',
+    '5) Fifth Task',
   ];
 
   @override
