@@ -18,6 +18,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final SearchController controller = SearchController();
   String userName = "";
   String userRole = "";
+  bool isSearching = false;
 
   int _selectedIndex = 0;
 
@@ -66,6 +67,15 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  // List of items for search suggestions
+  final List<String> _searchItems = [
+    '1) First Task',
+    '2) Second Task',
+    '3) Third Task',
+    '4) Fourth Task',
+    '5) Fifth Task',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,14 +84,6 @@ class _MyHomePageState extends State<MyHomePage> {
           'Hello $userName ($userRole)',
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        // actions: [
-        //   IconButton(
-        //     onPressed: () {
-        //       showSearch(context: context, delegate: MySearchDelegate());
-        //     },
-        //     icon: const Icon(Icons.search),
-        //   ),
-        // ],
         leading: Builder(
           builder: (context) {
             return IconButton(
@@ -140,25 +142,128 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           SizedBox(height: 10),
+
+          // Custom Search with Dropdown
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              children: [
+                // Search Bar
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: TextField(
+                    controller: controller,
+                    decoration: InputDecoration(
+                      hintText: 'Search tasks...',
+                      prefixIcon: const Icon(Icons.search),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        isSearching = value.isNotEmpty;
+                      });
+                    },
+                    onSubmitted: (value) {
+                      if (_searchItems.any(
+                        (item) =>
+                            item.toLowerCase().contains(value.toLowerCase()),
+                      )) {
+                        setState(() {
+                          // Keep only the matched item selected
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Selected: $value')),
+                          );
+                          isSearching = false;
+                        });
+                      }
+                      // Hide dropdown after submission
+                      // setState(() {
+                      //   isSearching = false;
+                      // });
+                    },
+                  ),
+                ),
+
+                // Dropdown Menu (only visible when searching)
+                if (isSearching)
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          spreadRadius: 1,
+                          blurRadius: 5,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    constraints: const BoxConstraints(maxHeight: 200),
+                    width: double.infinity,
+                    child: ListView(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      children:
+                          _searchItems
+                              .where(
+                                (item) => item.toLowerCase().contains(
+                                  controller.text.toLowerCase(),
+                                ),
+                              )
+                              .map(
+                                (item) => ListTile(
+                                  title: Text(item),
+                                  // leading: const Icon(Icons.task),
+                                  onTap: () {
+                                    setState(() {
+                                      controller.text = item;
+                                      isSearching = false;
+                                    });
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Selected: $item'),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              )
+                              .toList(),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+
+          // Display selected item if any
+          if (controller.text.isNotEmpty && !isSearching)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Selected: ${controller.text}',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+
+          Text(
+            "To Do List",
+            style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
+          ),
+
           Flexible(
             child: ListView(
               scrollDirection: Axis.vertical,
-
               children: [
-                IconButton(
-                  onPressed: () {
-                    showSearch(context: context, delegate: MySearchDelegate());
-                  },
-                  icon: const Icon(Icons.search),
-                  iconSize: 35,
-                ),
-
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "To Do List",
-                    style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
-                  ),
+                  // child: Text(
+                  //   "To Do List",
+                  //   style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
+                  // ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -207,50 +312,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
-
-          // SizedBox(
-          //   height: height * 0.65,
-          //   child: ListView(
-          //     scrollDirection: Axis.vertical,
-          //     children: [
-          //       ReusableCircleCard(
-          //         icon: Icons.shopping_cart,
-          //         label: 'Product',
-          //         pageToNavigate: StarPage(),
-          //       ),
-          //       SizedBox(width: 10),
-          //       ReusableCircleCard(
-          //         icon: Icons.star,
-          //         label: 'star',
-          //         pageToNavigate: StarPage(),
-          //       ),
-          //       SizedBox(width: 10),
-          //       ReusableCircleCard(
-          //         icon: Icons.star,
-          //         label: 'star',
-          //         pageToNavigate: StarPage(),
-          //       ),
-          //       SizedBox(width: 10),
-          //       ReusableCircleCard(
-          //         icon: Icons.contact_emergency,
-          //         label: 'contact',
-          //         pageToNavigate: StarPage(),
-          //       ),
-          //       SizedBox(width: 10),
-          //       ReusableCircleCard(
-          //         icon: Icons.stacked_line_chart_rounded,
-          //         label: 'chart1',
-          //         pageToNavigate: StarPage(),
-          //       ),
-          //       SizedBox(width: 10),
-          //       ReusableCircleCard(
-          //         icon: Icons.stacked_line_chart_rounded,
-          //         label: 'chart2',
-          //         pageToNavigate: StarPage(),
-          //       ),
-          //     ],
-          //   ),
-          // ),
         ],
       ),
 
@@ -336,218 +397,5 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
-  }
-}
-
-// class MySearchDelegate extends SearchDelegate {
-//   List<String> searchResults = [
-//     'Product 1',
-//     'Product 2',
-//     'Product 3',
-//     'Product 4',
-//     'Product 5',
-//   ];
-//   @override
-//   Widget? buildLeading(BuildContext context) => IconButton(
-//     onPressed: () => close(context, null),
-//     icon: const Icon(Icons.arrow_back),
-//   );
-
-//   @override
-//   List<Widget>? buildActions(BuildContext context) => [
-//     IconButton(
-//       icon: const Icon(Icons.clear),
-//       onPressed: () {
-//         if (query.isEmpty) {
-//           close(context, null);
-//         } else {
-//           query = '';
-//         }
-//       },
-//     ),
-//   ];
-
-//   @override
-//   Widget buildResults(BuildContext context) => Center(
-//     child: Text(
-//       query,
-//       style: const TextStyle(fontSize: 64, fontWeight: FontWeight.bold),
-//     ),
-//   );
-
-//   @override
-//   Widget buildSuggestions(BuildContext context) {
-//     List<String> suggestions =
-//         searchResults.where((searchResult) {
-//           final result = searchResult.toLowerCase();
-//           final input = query.toLowerCase();
-
-//           return result.contains(input);
-//         }).toList();
-
-//     return ListView.builder(
-//       itemCount: suggestions.length,
-//       itemBuilder: (context, index) {
-//         final suggestion = suggestions[index];
-
-//         return ListTile(
-//           title: Text(suggestion),
-//           onTap: () {
-//             query = suggestion;
-
-//             showResults(context);
-//           },
-//         );
-//       },
-//     );
-//   }
-// }
-class MySearchDelegate extends SearchDelegate {
-  List<String> searchResults = [
-    '1) First Task',
-    '2) Second Task',
-    '3) Third Task',
-    '4) Fourth Task',
-    '5) Fifth Task',
-  ];
-
-  @override
-  Widget? buildLeading(BuildContext context) => IconButton(
-    onPressed: () => close(context, null),
-    icon: const Icon(Icons.arrow_back),
-  );
-
-  @override
-  List<Widget>? buildActions(BuildContext context) => [
-    IconButton(
-      icon: const Icon(Icons.clear),
-      onPressed: () {
-        if (query.isEmpty) {
-          close(context, null);
-        } else {
-          query = '';
-        }
-      },
-    ),
-  ];
-
-  @override
-  Widget buildResults(BuildContext context) {
-    // Check if the query exactly matches any result
-    bool exactMatch = searchResults.any(
-      (result) => result.toLowerCase() == query.toLowerCase(),
-    );
-
-    // If there's no exact match, show "No results found"
-    if (!exactMatch) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.search_off, size: 64, color: Colors.grey),
-            const SizedBox(height: 16),
-            Text(
-              'No results found for "$query"',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Try searching from available suggestions',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-          ],
-        ),
-      );
-    }
-
-    // If we have an exact match, show the result
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.check_circle_outline, size: 64, color: Colors.green),
-          const SizedBox(height: 16),
-          Text(
-            query,
-            style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Product found!',
-            style: TextStyle(fontSize: 20, color: Colors.green),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    List<String> suggestions =
-        searchResults.where((searchResult) {
-          final result = searchResult.toLowerCase();
-          final input = query.toLowerCase();
-          return result.contains(input);
-        }).toList();
-
-    // Show "No suggestions found" when there are no matching suggestions
-    if (suggestions.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.search_off, size: 64, color: Colors.grey),
-            const SizedBox(height: 16),
-            Text(
-              'No suggestions found for "$query"',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    // Show suggestions when we have matches
-    return ListView.builder(
-      itemCount: suggestions.length,
-      itemBuilder: (context, index) {
-        final suggestion = suggestions[index];
-
-        return ListTile(
-          leading: const Icon(Icons.search),
-          title: Text(suggestion),
-          onTap: () {
-            query = suggestion;
-            showResults(context);
-          },
-        );
-      },
-    );
-  }
-
-  // Override this method to handle search submission
-  @override
-  void showResults(BuildContext context) {
-    // Check if the exact query matches any of our items before showing results
-    bool hasMatch = searchResults.any(
-      (result) => result.toLowerCase() == query.toLowerCase(),
-    );
-
-    // Only allow proceeding to results if there's an exact match
-    if (hasMatch) {
-      super.showResults(context);
-    } else {
-      // If not an exact match, we still show results screen but it will
-      // display "No results found" as implemented in buildResults
-      super.showResults(context);
-    }
   }
 }

@@ -39,6 +39,7 @@ dependencies:
   hive: 
   hive_flutter: 
   path_provider:
+  dropdown_button2:
 
 
 
