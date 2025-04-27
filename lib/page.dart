@@ -18,9 +18,17 @@ class _MyHomePageState extends State<MyHomePage> {
   final SearchController controller = SearchController();
   String userName = "";
   String userRole = "";
-  bool isSearching = false;
+  // bool isSearching = false;
 
   int _selectedIndex = 0;
+
+  final List<String> _tasks = [
+    '1) First Task',
+    '2) Second Task',
+    '3) Third Task',
+    '4) Fourth Task',
+    '5) Fifth Task',
+  ];
 
   @override
   void initState() {
@@ -68,13 +76,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   // List of items for search suggestions
-  final List<String> _searchItems = [
-    '1) First Task',
-    '2) Second Task',
-    '3) Third Task',
-    '4) Fourth Task',
-    '5) Fifth Task',
-  ];
+  // final List<String> _searchItems = [
+  //   '1) First Task',
+  //   '2) Second Task',
+  //   '3) Third Task',
+  //   '4) Fourth Task',
+  //   '5) Fifth Task',
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -146,101 +154,30 @@ class _MyHomePageState extends State<MyHomePage> {
           // Custom Search with Dropdown
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              children: [
-                // Search Bar
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade300),
-                  ),
-                  child: TextField(
-                    controller: controller,
-                    decoration: InputDecoration(
-                      hintText: 'Search tasks...',
-                      prefixIcon: const Icon(Icons.search),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        isSearching = value.isNotEmpty;
-                      });
-                    },
-                    onSubmitted: (value) {
-                      if (_searchItems.any(
-                        (item) =>
-                            item.toLowerCase().contains(value.toLowerCase()),
-                      )) {
-                        setState(() {
-                          // Keep only the matched item selected
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Selected: $value')),
-                          );
-                          isSearching = false;
-                        });
-                      }
-                      // Hide dropdown after submission
-                      // setState(() {
-                      //   isSearching = false;
-                      // });
-                    },
-                  ),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: TextField(
+                controller: controller,
+                decoration: InputDecoration(
+                  hintText: 'Search tasks...',
+                  prefixIcon: const Icon(Icons.search),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
                 ),
-
-                // Dropdown Menu (only visible when searching)
-                if (isSearching)
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 1,
-                          blurRadius: 5,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    constraints: const BoxConstraints(maxHeight: 200),
-                    width: double.infinity,
-                    child: ListView(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.zero,
-                      children:
-                          _searchItems
-                              .where(
-                                (item) => item.toLowerCase().contains(
-                                  controller.text.toLowerCase(),
-                                ),
-                              )
-                              .map(
-                                (item) => ListTile(
-                                  title: Text(item),
-                                  // leading: const Icon(Icons.task),
-                                  onTap: () {
-                                    setState(() {
-                                      controller.text = item;
-                                      isSearching = false;
-                                    });
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text('Selected: $item'),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              )
-                              .toList(),
-                    ),
-                  ),
-              ],
+                onChanged: (value) {
+                  setState(() {
+                    // This will trigger a rebuild and filter the list
+                  });
+                },
+              ),
             ),
           ),
 
           // Display selected item if any
-          if (controller.text.isNotEmpty && !isSearching)
+          if (controller.text.isNotEmpty)
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
@@ -257,59 +194,26 @@ class _MyHomePageState extends State<MyHomePage> {
           Flexible(
             child: ListView(
               scrollDirection: Axis.vertical,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  // child: Text(
-                  //   "To Do List",
-                  //   style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
-                  // ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(title: Text('1) First Task')),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(title: Text('2) Second Task')),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(title: Text('3) Third Task')),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(title: Text('4) Fourth Task')),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(title: Text('4) Fourth Task')),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(title: Text('4) Fourth Task')),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(title: Text('4) Fourth Task')),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(title: Text('4) Fourth Task')),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(title: Text('4) Fourth Task')),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(title: Text('4) Fourth Task')),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(title: Text('4) Fourth Task')),
-                ),
-              ],
+              children: _tasks
+                  .where((task) =>
+                      task.toLowerCase().contains(controller.text.toLowerCase()))
+                  .map((task) => Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListTile(
+                          title: Text(task),
+                          onTap: () {
+                            setState(() {
+                              controller.text = task;
+                            });
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Selected: $task'),
+                              ),
+                            );
+                          },
+                        ),
+                      ))
+                  .toList(),
             ),
           ),
         ],
