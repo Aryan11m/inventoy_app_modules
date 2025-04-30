@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hive/hive.dart';
-import 'package:inventory_app/login1.dart';
+import 'package:inventory_app/QRCode/company_code.dart';
 import 'package:inventory_app/main.dart';
 import 'package:inventory_app/cards.dart';
 import 'package:inventory_app/star.dart';
@@ -28,6 +28,11 @@ class _MyHomePageState extends State<MyHomePage> {
     '3) Third Task',
     '4) Fourth Task',
     '5) Fifth Task',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
   ];
 
   @override
@@ -41,7 +46,6 @@ class _MyHomePageState extends State<MyHomePage> {
     final authBox = Hive.box('authBox');
     final email = authBox.get('userEmail', defaultValue: "User");
     final role = authBox.get('userRole', defaultValue: "");
-
     setState(() {
       userName =
           email.toString().split('@')[0]; // Use the part before @ as name
@@ -55,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
     authBox.put('isLoggedIn', false);
 
     // Navigate to login page
-    Get.offAll(() => const LoginPage());
+    Get.offAll(() => const CompanyCode());
   }
 
   static const TextStyle optionStyle = TextStyle(
@@ -75,21 +79,12 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  // List of items for search suggestions
-  // final List<String> _searchItems = [
-  //   '1) First Task',
-  //   '2) Second Task',
-  //   '3) Third Task',
-  //   '4) Fourth Task',
-  //   '5) Fifth Task',
-  // ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Hello $userName ($userRole)',
+          'Hello $userName $userRole',
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         leading: Builder(
@@ -111,6 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ' Products',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
+
           SizedBox(
             height: height * 0.15,
             child: ListView(
@@ -177,43 +173,74 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
 
           // Display selected item if any
-          if (controller.text.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Selected: ${controller.text}',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-
-          Text(
-            "To Do List",
-            style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
-          ),
+          // if (controller.text.isNotEmpty)
+          //   Padding(
+          //     padding: const EdgeInsets.all(8.0),
+          //     child: Text(
+          //       'Selected: ${controller.text}',
+          //       style: const TextStyle(fontWeight: FontWeight.bold),
+          //     ),
+          //   ),
+          const SizedBox(height: 20),
 
           Flexible(
-            child: ListView(
+            // height: height * 0.54,
+            child: ListView.builder(
+              shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              children: _tasks
-                  .where((task) =>
-                      task.toLowerCase().contains(controller.text.toLowerCase()))
-                  .map((task) => Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          title: Text(task),
-                          onTap: () {
-                            setState(() {
-                              controller.text = task;
-                            });
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Selected: $task'),
-                              ),
-                            );
-                          },
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount:
+                  _tasks
+                      .where(
+                        (task) => task.toLowerCase().contains(
+                          controller.text.toLowerCase(),
                         ),
-                      ))
-                  .toList(),
+                      )
+                      .length,
+              itemBuilder: (context, index) {
+                final filteredTasks =
+                    _tasks
+                        .where(
+                          (task) => task.toLowerCase().contains(
+                            controller.text.toLowerCase(),
+                          ),
+                        )
+                        .toList();
+                final task = filteredTasks[index];
+
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: const Color.fromARGB(255, 117, 221, 157),
+                        width: 4,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color.fromARGB(255, 117, 221, 157),
+                          offset: const Offset(5.0, 5.0), //Offset
+                          blurRadius: 6.0,
+                          spreadRadius: 2.0,
+                        ), //BoxShadow
+                        BoxShadow(
+                          color: Colors.white,
+                          offset: const Offset(0.0, 0.0),
+                          blurRadius: 0.0,
+                          spreadRadius: 0.0,
+                        ), //BoxShadow
+                      ],
+                    ),
+                    child: ListTile(
+                      title: Text(task),
+                      onTap: () {
+                        print("task list which i tapped $task");
+                      },
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],

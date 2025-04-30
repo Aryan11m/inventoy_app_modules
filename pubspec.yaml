@@ -40,6 +40,9 @@ dependencies:
   hive_flutter: 
   path_provider:
   dropdown_button2:
+  camera: ^0.11.1
+  path: ^1.9.1
+  mobile_scanner:
 
 
 

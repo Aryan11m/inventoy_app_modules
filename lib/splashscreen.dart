@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:inventory_app/login1.dart';
-import 'package:inventory_app/page.dart';
+import 'package:inventory_app/QRCode/company_code.dart';
+import 'package:inventory_app/QRCode/homepage.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -32,10 +32,10 @@ class _SplashscreenState extends State<SplashScreen> {
 
     if (isLoggedIn) {
       // User is logged in, navigate to home page
-      Get.off(() => const MyHomePage());
+      Get.off(() => const Scanner());
     } else {
       // User is not logged in, navigate to login page
-      Get.off(() => const LoginPage());
+      Get.off(() => const CompanyCode());
     }
   }
 
