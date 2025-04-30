@@ -49,65 +49,29 @@ class _ScannerState extends State<Scanner> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Hello  $userEmail $companyCode")),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              if (isScannerVisible)
-                Container(
-                  height: height * 0.4,
-                  width: width * 0.70,
-                  child: MobileScanner(
-                    onDetect: (capture) {
-                      final List<Barcode> barcodes = capture.barcodes;
-                      for (final barcode in barcodes) {
-                        setState(() {
-                          (scannedResult =
-                              barcode.rawValue ?? "No Data found in QR");
-                        });
-                      }
-                    },
-                  ),
-                ),
-              Center(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                    backgroundColor: Colors.amber[200],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: Text(isScannerVisible ? 'close' : 'Scan Qr Code'),
-                  onPressed: () {
-                    setState(() {
-                      isScannerVisible = !isScannerVisible;
-                    });
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            if (isScannerVisible)
+              Container(
+                height: height * 0.4,
+                width: width * 0.70,
+                child: MobileScanner(
+                  onDetect: (capture) {
+                    final List<Barcode> barcodes = capture.barcodes;
+                    for (final barcode in barcodes) {
+                      setState(() {
+                        (scannedResult =
+                            barcode.rawValue ?? "No Data found in QR");
+                      });
+                    }
                   },
                 ),
               ),
-
-              Text(
-                'Scanned Data',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-              ),
-
-              Container(
-                height: height * 0.28,
-                width: width * 0.79,
-
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(scannedResult),
-                ),
-              ),
-              ElevatedButton(
+            Center(
+              child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                   backgroundColor: Colors.amber[200],
@@ -115,15 +79,49 @@ class _ScannerState extends State<Scanner> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: Text('Logout'),
+                child: Text(isScannerVisible ? 'close' : 'Scan Qr Code'),
                 onPressed: () {
                   setState(() {
-                    logout();
+                    isScannerVisible = !isScannerVisible;
                   });
                 },
               ),
-            ],
-          ),
+            ),
+
+            Text(
+              'Scanned Data',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+            ),
+
+            Container(
+              height: height * 0.20,
+              width: width * 0.79,
+
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(scannedResult),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                backgroundColor: Colors.amber[200],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: Text('Logout'),
+              onPressed: () {
+                setState(() {
+                  logout();
+                });
+              },
+            ),
+          ],
         ),
       ),
     );
