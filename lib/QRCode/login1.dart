@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -133,8 +135,10 @@ class _LoginPageState extends State<LoginPage> {
                 TextFormField(
                   controller: emailController,
                   validator: _validateUser,
+
                   decoration: const InputDecoration(
                     labelText: 'Username',
+
                     border: OutlineInputBorder(),
                   ),
                 ),

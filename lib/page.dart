@@ -62,16 +62,16 @@ class _MyHomePageState extends State<MyHomePage> {
     Get.offAll(() => const CompanyCode());
   }
 
-  static const TextStyle optionStyle = TextStyle(
-    fontSize: 30,
-    fontWeight: FontWeight.bold,
-  );
+  // static const TextStyle optionStyle = TextStyle(
+  //   fontSize: 30,
+  //   fontWeight: FontWeight.bold,
+  // );
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text('Index 0:Home', style: optionStyle),
-    Text('Index 1:Business', style: optionStyle),
-    Text('Index 2:School', style: optionStyle),
-  ];
+  // static const List<Widget> _widgetOptions = <Widget>[
+  //   Text('Index 0:Home', style: optionStyle),
+  //   Text('Index 1:Business', style: optionStyle),
+  //   Text('Index 2:School', style: optionStyle),
+  // ];
 
   void _onItemTapped(int index) {
     setState(() {

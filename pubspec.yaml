@@ -43,7 +43,7 @@ dependencies:
   camera: ^0.11.1
   path: ^1.9.1
   mobile_scanner:
-
+  http:
 
 
 dev_dependencies:
