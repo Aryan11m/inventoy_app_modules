@@ -17,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKeys = GlobalKey<FormState>();
   bool isChecked = false;
 
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   // late Box forlog1;
@@ -36,9 +36,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void getData() async {
-    if (authBox.get('email') != null) {
-      emailController.text = authBox.get('email');
-      isChecked = true; // If email exists, "Remember Me" was checked
+    if (authBox.get('name') != null) {
+      nameController.text = authBox.get('name');
+      isChecked = true; // If name exists, "Remember Me" was checked
       setState(() {});
     }
     if (authBox.get('password') != null) {
@@ -51,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void login() {
     if (_formKeys.currentState!.validate()) {
-      String email = emailController.text;
+      String name = nameController.text;
       String password = passwordController.text;
       final now = DateTime.now();
 
@@ -60,23 +60,23 @@ class _LoginPageState extends State<LoginPage> {
 
       // Always set the user as logged in when successfully logging in
       authBox.put('isLoggedIn', true);
-      authBox.put('userEmail', email);
+      authBox.put('userName', name.capitalizeFirst);
       authBox.put('userRole', selectedRole);
       authBox.put('lastLoginTime', now.toString());
 
       Get.off(() => const Scanner());
 
       print('Role: $selectedRole');
-      print('Email: $email');
+      print('name: $name');
       print('Password: $password');
       print('LoggedInTime: $now');
     }
   }
 
-  // String? _validateEmail(String? value) {
-  //   if (value == null || value.isEmpty) return 'Enter email';
-  //   final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$');
-  //   if (!emailRegex.hasMatch(value)) return 'Enter valid email id';
+  // String? _validatename(String? value) {
+  //   if (value == null || value.isEmpty) return 'Enter name';
+  //   final nameRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$');
+  //   if (!nameRegex.hasMatch(value)) return 'Enter valid name id';
   //   return null;
   // }
 
@@ -133,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                 // ),
                 const SizedBox(height: 24),
                 TextFormField(
-                  controller: emailController,
+                  controller: nameController,
                   validator: _validateUser,
 
                   decoration: const InputDecoration(
@@ -195,12 +195,12 @@ class _LoginPageState extends State<LoginPage> {
 
   void login1() {
     if (isChecked) {
-      // Save email and password if "Remember Me" is checked
-      authBox.put('email', emailController.text);
+      // Save name and password if "Remember Me" is checked
+      authBox.put('name', nameController.text);
       authBox.put('password', passwordController.text);
     } else {
       // Clear saved credentials if "Remember Me" is unchecked
-      authBox.delete('email');
+      authBox.delete('name');
       authBox.delete('password');
     }
   }

@@ -44,6 +44,7 @@ dependencies:
   path: ^1.9.1
   mobile_scanner:
   http:
+  animated_text_kit:
 
 
 dev_dependencies:

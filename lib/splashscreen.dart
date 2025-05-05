@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:inventory_app/QRCode/company_code.dart';
 import 'package:inventory_app/QRCode/homepage.dart';
+// import 'package:animated_text_kit/animated_text_kit.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -43,13 +44,21 @@ class _SplashscreenState extends State<SplashScreen> {
     return Scaffold(
       body: Container(
         color: Colors.blue,
-        child: const Center(
+        child: Center(
           child: Text(
             'Invento',
             style: TextStyle(
-              fontSize: 34,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w900,
+              fontStyle: FontStyle.italic,
+              fontSize: 48,
               color: Colors.white,
+              shadows: [
+                Shadow(
+                  offset: Offset(2.0, 2.0),
+                  blurRadius: 3.0,
+                  color: Color.fromARGB(255, 61, 60, 60),
+                ),
+              ],
             ),
           ),
         ),

@@ -62,7 +62,18 @@ class _CompanyCodeState extends State<CompanyCode> {
                 // ),
                 const Text(
                   'Invento',
-                  style: TextStyle(fontSize: 44, fontWeight: FontWeight.w800),
+                  style: TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.w900,
+                    fontStyle: FontStyle.italic,
+                    shadows: [
+                      Shadow(
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 3.0,
+                        color: Color.fromARGB(255, 175, 173, 173),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 34),
 

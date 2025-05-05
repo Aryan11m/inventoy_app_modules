@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:inventory_app/QRCode/api.dart';
+import 'package:inventory_app/QRCode/company_code.dart';
 import 'package:inventory_app/main.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -17,7 +18,7 @@ class _ScannerState extends State<Scanner> {
   bool isScannerVisible = false;
   late String scannedResult = "";
   String companyCode = "";
-  String userEmail = "";
+  String userName = "";
   bool isChecked = false;
 
   @override
@@ -33,17 +34,17 @@ class _ScannerState extends State<Scanner> {
     authBox.put('isLoggedIn', false);
 
     // Navigate to login page
-    // Get.offAll(() => const CompanyCode());
-    Get.off(() => const MyWidget());
+    Get.offAll(() => const CompanyCode());
+    // Get.off(() => const MyWidget());
   }
 
   void getUserInfo() async {
     final authBox = Hive.box('authBox');
     final code = authBox.get('companyCode', defaultValue: "");
-    final email = authBox.get('userEmail', defaultValue: "");
+    final name = authBox.get('userName', defaultValue: "");
     setState(() {
       companyCode = code;
-      userEmail = email;
+      userName = name;
     });
   }
 
@@ -51,7 +52,7 @@ class _ScannerState extends State<Scanner> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Hello  $userEmail $companyCode"),
+        title: Text("Hello  $userName ($companyCode)"),
         titleTextStyle: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 24,
@@ -73,7 +74,8 @@ class _ScannerState extends State<Scanner> {
                     if (isScannerVisible)
                       SizedBox(
                         height: height * 0.4,
-                        width: width * 0.70,
+                        width: width * 0.79,
+
                         child: MobileScanner(
                           onDetect: (capture) {
                             final List<Barcode> barcodes = capture.barcodes;
@@ -138,39 +140,69 @@ class _ScannerState extends State<Scanner> {
                         width: width * 0.79,
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.black),
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(0),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             scannedResult,
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
                       ),
 
                       // SizedBox(height: 10),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 40,
-                            vertical: 10,
-                          ),
-                          backgroundColor: Colors.amber[200],
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: Text('Logout'),
-                        onPressed: () {
-                          setState(() {
-                            logout();
-                          });
-                        },
-                      ),
                     ],
                   ),
                 ],
+              ),
+            if (isScannerVisible)
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 40,
+                          vertical: 10,
+                        ),
+                        backgroundColor: Colors.amber[200],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text('Logout'),
+                      onPressed: () {
+                        setState(() {
+                          logout();
+                        });
+                      },
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 40,
+                          vertical: 10,
+                        ),
+                        backgroundColor: Colors.amber[200],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text('Clear'),
+                      onPressed: () {
+                        setState(() {
+                          scannedResult = '';
+                        });
+                      },
+                    ),
+                  ],
+                ),
               ),
           ],
         ),
