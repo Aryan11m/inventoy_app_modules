@@ -174,6 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                 ElevatedButton(
                   onPressed: login,
                   style: ElevatedButton.styleFrom(
+                    elevation: 10,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 40,
                       vertical: 10,

@@ -89,6 +89,7 @@ class _CompanyCodeState extends State<CompanyCode> {
 
                 FilledButton(
                   style: FilledButton.styleFrom(
+                    
                     padding: const EdgeInsets.symmetric(
                       horizontal: 40,
                       vertical: 10,

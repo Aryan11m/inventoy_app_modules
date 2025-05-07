@@ -44,7 +44,9 @@ dependencies:
   path: ^1.9.1
   mobile_scanner:
   http:
-  animated_text_kit:
+  dio:
+  animated_text_kit: ^4.2.3
+  
 
 
 dev_dependencies:
