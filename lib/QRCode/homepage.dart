@@ -83,17 +83,17 @@ class _ScannerState extends State<Scanner> {
                         height: height * 0.38,
                         width: width * 0.85,
 
-                        // child: MobileScanner(
-                        //   onDetect: (capture) {
-                        //     final List<Barcode> barcodes = capture.barcodes;
-                        //     for (final barcode in barcodes) {
-                        //       setState(() {
-                        //         (scannedResult =
-                        //             barcode.rawValue ?? "No Data found in QR");
-                        //       });
-                        //     }
-                        //   },
-                        // ),
+                        child: MobileScanner(
+                          onDetect: (capture) {
+                            final List<Barcode> barcodes = capture.barcodes;
+                            for (final barcode in barcodes) {
+                              setState(() {
+                                (scannedResult =
+                                    barcode.rawValue ?? "No Data found in QR");
+                              });
+                            }
+                          },
+                        ),
                       ),
 
                     SizedBox(height: 10),
