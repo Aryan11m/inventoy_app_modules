@@ -47,8 +47,11 @@ dependencies:
   dio:
   animated_text_kit: ^4.2.3
   open_filex:   
-
-
+  # open_file:
+  pdf_compressor: 
+  simple_gradient_text: 
+  intl: ^0.20.2
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

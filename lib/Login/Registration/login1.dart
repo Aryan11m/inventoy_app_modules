@@ -4,9 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
-import 'package:inventory_app/QRCode/homepage.dart';
+import 'package:inventory_app/Controllers.dart';
+import 'package:inventory_app/Login/Registration/forgot_password.dart';
+// import 'package:inventory_app/main.dart';
+// import 'package:inventory_app/QRCode/homepage.dart';
+import 'package:inventory_app/page.dart';
+import 'package:inventory_app/Login/Registration/register.dart';
+import 'package:inventory_app/Login/Registration/validators.dart';
 
 class LoginPage extends StatefulWidget {
+  // static var getControllers.passwordController;
+
+  // static var getControllers.emailController;
+
   const LoginPage({super.key});
 
   @override
@@ -16,9 +26,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKeys = GlobalKey<FormState>();
   bool isChecked = false;
+  var getControllers = Get.put(Controllers());
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  // final TextEditingController getControllers.emailController = TextEditingController();
+  // final TextEditingController getControllers.passwordController = TextEditingController();
 
   // late Box forlog1;
   late Box authBox;
@@ -36,13 +47,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void getData() async {
-    if (authBox.get('name') != null) {
-      nameController.text = authBox.get('name');
-      isChecked = true; // If name exists, "Remember Me" was checked
+    if (authBox.get('email') != null) {
+      getControllers.emailController.text = authBox.get('email');
+      isChecked = true; // If email exists, "Remember Me" was checked
       setState(() {});
     }
     if (authBox.get('password') != null) {
-      passwordController.text = authBox.get('password');
+      getControllers.passwordController.text = authBox.get('password');
     }
   }
 
@@ -51,8 +62,8 @@ class _LoginPageState extends State<LoginPage> {
 
   void login() {
     if (_formKeys.currentState!.validate()) {
-      String name = nameController.text;
-      String password = passwordController.text;
+      String email = getControllers.emailController.text;
+      String password = getControllers.passwordController.text;
       final now = DateTime.now();
 
       // Save login credentials if "Remember Me" is checked
@@ -60,23 +71,23 @@ class _LoginPageState extends State<LoginPage> {
 
       // Always set the user as logged in when successfully logging in
       authBox.put('isLoggedIn', true);
-      authBox.put('userName', name.capitalizeFirst);
+      authBox.put('userEmail', email.capitalizeFirst);
       authBox.put('userRole', selectedRole);
       authBox.put('lastLoginTime', now.toString());
 
-      Get.off(() => const Scanner());
+      Get.off(() => const MyHomePage());
 
       print('Role: $selectedRole');
-      print('name: $name');
+      print('email: $email');
       print('Password: $password');
       print('LoggedInTime: $now');
     }
   }
 
-  // String? _validatename(String? value) {
-  //   if (value == null || value.isEmpty) return 'Enter name';
-  //   final nameRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$');
-  //   if (!nameRegex.hasMatch(value)) return 'Enter valid name id';
+  // String? validateEmail(String? value) {
+  //   if (value == null || value.isEmpty) return 'Enter email';
+  //   final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$');
+  //   if (!emailRegex.hasMatch(value)) return 'Enter valid email id';
   //   return null;
   // }
 
@@ -86,11 +97,11 @@ class _LoginPageState extends State<LoginPage> {
   //   return null;
   // }
 
-  String? _validateUser(String? value) {
-    if (value == null || value.isEmpty) return 'This field is empty';
-    // if (value.length < 6) return 'Password must be of atleast 6 characters';
-    return null;
-  }
+  // String? _validateUser(String? value) {
+  //   if (value == null || value.isEmpty) return 'This field is empty';
+  //   // if (value.length < 6) return 'Password must be of atleast 6 characters';
+  //   return null;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -115,38 +126,36 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(fontSize: 34, fontWeight: FontWeight.w800),
                 ),
                 const SizedBox(height: 34),
-                // DropdownButtonFormField<String>(
-                //   value: selectedRole,
-                //   items:
-                //       roles.map((role) {
-                //         return DropdownMenuItem(value: role, child: Text(role));
-                //       }).toList(),
-                //   onChanged: (value) {
-                //     setState(() {
-                //       selectedRole = value!;
-                //     });
-                //   },
-                //   decoration: const InputDecoration(
-                //     labelText: 'Select Role',
-                //     border: OutlineInputBorder(),
-                //   ),
-                // ),
-                const SizedBox(height: 24),
-                TextFormField(
-                  controller: nameController,
-                  validator: _validateUser,
-
+                DropdownButtonFormField<String>(
+                  value: selectedRole,
+                  items:
+                      roles.map((role) {
+                        return DropdownMenuItem(value: role, child: Text(role));
+                      }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedRole = value!;
+                    });
+                  },
                   decoration: const InputDecoration(
-                    labelText: 'Username',
-
+                    labelText: 'Select Role',
                     border: OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 24),
                 TextFormField(
-                  controller: passwordController,
+                  controller: getControllers.emailController,
+                  validator: Validator.validateEmail,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                TextFormField(
+                  controller: getControllers.passwordController,
                   obscureText: true,
-                  validator: _validateUser,
+                  validator: Validator.validatePassword,
                   decoration: const InputDecoration(
                     labelText: 'Password',
                     border: OutlineInputBorder(),
@@ -168,6 +177,16 @@ class _LoginPageState extends State<LoginPage> {
                         });
                       },
                     ),
+                    SizedBox(width: 60),
+                    GestureDetector(
+                      child: Text(
+                        'Forgot Password',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                      onTap: () {
+                        Get.to(forgotPassword());
+                      },
+                    ),
                   ],
                 ),
                 SizedBox(height: 30),
@@ -186,6 +205,18 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                 ),
+                SizedBox(height: 20),
+
+                GestureDetector(
+                  child: Text(
+                    "Don't have an account? Sign-Up",
+                    style: TextStyle(color: Colors.deepPurple),
+                  ),
+                  onTap: () {
+                    Get.off(registerationPage());
+                  },
+                ),
+                SizedBox(height: 20),
               ],
             ),
           ),
@@ -196,12 +227,12 @@ class _LoginPageState extends State<LoginPage> {
 
   void login1() {
     if (isChecked) {
-      // Save name and password if "Remember Me" is checked
-      authBox.put('name', nameController.text);
-      authBox.put('password', passwordController.text);
+      // Save email and password if "Remember Me" is checked
+      authBox.put('email', getControllers.emailController.text);
+      authBox.put('password', getControllers.passwordController.text);
     } else {
       // Clear saved credentials if "Remember Me" is unchecked
-      authBox.delete('name');
+      authBox.delete('email');
       authBox.delete('password');
     }
   }

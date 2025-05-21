@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:inventory_app/QRCode/company_code.dart';
-import 'package:inventory_app/QRCode/homepage.dart';
+// import 'package:inventory_app/QRCode/homepage.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:inventory_app/Status.dart';
+import 'package:inventory_app/page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -32,7 +34,7 @@ class _SplashscreenState extends State<SplashScreen> {
 
     if (isLoggedIn) {
       // User is logged in, navigate to home page
-      Get.off(() => const Scanner());
+      Get.off(() => const Approval());
     } else {
       // User is not logged in, navigate to login page
       Get.off(() => const CompanyCode());

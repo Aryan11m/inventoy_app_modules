@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 // import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:inventory_app/QRCode/login1.dart';
+import 'package:inventory_app/Login/Registration/login1.dart';
 import 'package:get/get.dart';
 import 'package:inventory_app/page.dart';
 import 'package:inventory_app/splashscreen.dart';

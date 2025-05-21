@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:hive/hive.dart';
 import 'package:inventory_app/QRCode/company_code.dart';
+import 'package:inventory_app/Subs/subscription.dart';
 import 'package:inventory_app/main.dart';
 import 'package:inventory_app/cards.dart';
 import 'package:inventory_app/star.dart';
@@ -18,6 +19,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final SearchController controller = SearchController();
   String userName = "";
   String userRole = "";
+  bool status1 = false;
   // bool isSearching = false;
 
   int _selectedIndex = 0;
@@ -38,25 +40,39 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    // Load user info from Hive
     getUserInfo();
   }
 
   void getUserInfo() async {
     final authBox = Hive.box('authBox');
-    final email = authBox.get('userEmail', defaultValue: "User");
-    final role = authBox.get('userRole', defaultValue: "");
+    // Make sure to clear any cached values
+    await authBox.flush();
+
     setState(() {
+      status1 = authBox.get('status', defaultValue: false);
       userName =
-          email.toString().split('@')[0]; // Use the part before @ as name
-      userRole = role;
+          authBox
+              .get('userEmail', defaultValue: "User")
+              .toString()
+              .split('@')[0];
+      userRole = authBox.get('userRole', defaultValue: "");
     });
+
+    print("In getUserInfo, status1 is: $status1"); // Debug print
+  }
+
+  bool checkSubscriptionStatus() {
+    final authBox = Hive.box('authBox');
+    bool currentStatus = authBox.get('status', defaultValue: false);
+    print("checkSubscriptionStatus returns: $currentStatus"); // Debug print
+    return currentStatus;
   }
 
   void logout() {
     // Set the user as logged out
     final authBox = Hive.box('authBox');
     authBox.put('isLoggedIn', false);
+    setState(() {});
 
     // Navigate to login page
     Get.offAll(() => const CompanyCode());
@@ -81,10 +97,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // Force refresh status at build time
+    status1 = checkSubscriptionStatus();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Hello $userName $userRole',
+          'Hello $userName ($userRole)',
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         leading: Builder(
@@ -92,12 +111,48 @@ class _MyHomePageState extends State<MyHomePage> {
             return IconButton(
               icon: const Icon(Icons.menu),
               onPressed: () {
-                Scaffold.of(context).openDrawer();
+                // Always check fresh status
+                bool currentStatus = checkSubscriptionStatus();
+
+                if (currentStatus) {
+                  Scaffold.of(context).openDrawer();
+                } else {
+                  Get.to(() => Subscription1())?.then((_) {
+                    // Force UI update when returning
+                    setState(() {
+                      status1 = checkSubscriptionStatus();
+                    });
+                  });
+                }
               },
             );
           },
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: () {
+              bool currentStatus = checkSubscriptionStatus();
+              if (!currentStatus) {
+                Get.to(() => Subscription1())?.then((_) {
+                  // Update status1 when returning from subscription page
+                  final authBox = Hive.box('authBox');
+                  setState(() {
+                    status1 = authBox.get('status', defaultValue: false);
+                  });
+                });
+              } else {
+                Get.to(StarPage());
+              }
+            },
+          ),
+        ],
       ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: () {},
+      //   icon: const Icon(Icons.play_arrow),
+      //   label: const Text('Show Snackbar'),
+      // ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -106,37 +161,37 @@ class _MyHomePageState extends State<MyHomePage> {
             ' Products',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-
           SizedBox(
-            height: height * 0.15,
+            height: height * 0.19,
             child: ListView(
               scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
               children: [
-                SizedBox(width: 10),
+                // SizedBox(width: 10),
                 ReusableCircleCard(
                   icon: Icons.star,
                   label: 'star',
                   pageToNavigate: StarPage(),
                 ),
-                SizedBox(width: 10),
+                // SizedBox(width: 10),
                 ReusableCircleCard(
                   icon: Icons.star,
                   label: 'star',
                   pageToNavigate: StarPage(),
                 ),
-                SizedBox(width: 10),
+                // SizedBox(width: 10),
                 ReusableCircleCard(
                   icon: Icons.contact_emergency,
                   label: 'contact',
                   pageToNavigate: StarPage(),
                 ),
-                SizedBox(width: 10),
+                // SizedBox(width: 10),
                 ReusableCircleCard(
                   icon: Icons.stacked_line_chart_rounded,
                   label: 'chart1',
                   pageToNavigate: StarPage(),
                 ),
-                SizedBox(width: 10),
+                // SizedBox(width: 10),
                 ReusableCircleCard(
                   icon: Icons.stacked_line_chart_rounded,
                   label: 'chart2',
@@ -146,22 +201,23 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           SizedBox(height: 10),
-
           // Custom Search with Dropdown
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey.shade300),
+                border: Border.all(
+                  color: const Color.fromARGB(255, 153, 22, 22),
+                ),
               ),
               child: TextField(
                 controller: controller,
                 decoration: InputDecoration(
                   hintText: 'Search tasks...',
                   prefixIcon: const Icon(Icons.search),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                  border: OutlineInputBorder(borderSide: BorderSide.none),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 14),
                 ),
                 onChanged: (value) {
                   setState(() {
@@ -171,7 +227,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-
           // Display selected item if any
           // if (controller.text.isNotEmpty)
           //   Padding(
@@ -182,7 +237,6 @@ class _MyHomePageState extends State<MyHomePage> {
           //     ),
           //   ),
           const SizedBox(height: 20),
-
           Flexible(
             // height: height * 0.54,
             child: ListView.builder(
@@ -207,14 +261,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         )
                         .toList();
                 final task = filteredTasks[index];
-
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: const Color.fromARGB(255, 117, 221, 157),
-                        width: 4,
+                        width: 2,
                       ),
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
@@ -236,6 +289,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       title: Text(task),
                       onTap: () {
                         print("task list which i tapped $task");
+                        // controller.text = filteredTasks[index];
                       },
                     ),
                   ),
@@ -245,7 +299,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,

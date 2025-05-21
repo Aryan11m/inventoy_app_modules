@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:inventory_app/QRCode/login1.dart';
+import 'package:inventory_app/Login/Registration/login1.dart';
 import 'package:hive/hive.dart';
 
 class CompanyCode extends StatefulWidget {

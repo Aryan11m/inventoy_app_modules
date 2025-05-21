@@ -31,12 +31,13 @@ class ReusableCircleCard extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
+              
               CircleAvatar(
-                radius: 40,
+                radius: 35,
                 backgroundColor: Colors.blue.shade100,
                 child: Icon(icon, size: 40, color: Colors.black87),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 5),
               Text(label),
             ],
           ),
