@@ -22,7 +22,6 @@ class _PddState extends State<Pdd> {
   String _errorMessage = '';
   String _statusMessage = '';
   String? _originalPdfPath;
-  bool _pdfGenerated = false;
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +105,6 @@ class _PddState extends State<Pdd> {
       _isLoading = true;
       _errorMessage = '';
       _statusMessage = '';
-      _pdfGenerated = false;
     });
 
     try {
@@ -119,7 +117,6 @@ class _PddState extends State<Pdd> {
       final filePath = await _base64ToPdf(base64String, 'sample_document');
       setState(() {
         _originalPdfPath = filePath;
-        _pdfGenerated = true;
         _statusMessage = 'PDF generated successfully';
       });
 

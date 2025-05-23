@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:inventory_app/page.dart';
+// import 'package:inventory_app/page.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:inventory_app/main.dart';
 import 'package:get/get.dart';
-import 'package:inventory_app/star.dart';
+// import 'package:inventory_app/star.dart';
 
 class Subscription1 extends StatefulWidget {
   const Subscription1({super.key});
