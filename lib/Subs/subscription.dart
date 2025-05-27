@@ -74,7 +74,7 @@ class _Subscription1State extends State<Subscription1> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Container(
+      body: SizedBox(
         height: height * 0.9,
         width: width * 1,
         child: ListView(

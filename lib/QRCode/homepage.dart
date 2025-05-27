@@ -218,7 +218,7 @@ class _ScannerState extends State<Scanner> {
                       ),
                       onPressed: () {
                         setState(() {
-                          Get.to(MyWidget());
+                          // Get.to(MyWidget());
                           scannedResult = '';
                         });
                       },

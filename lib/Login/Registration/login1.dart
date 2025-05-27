@@ -131,8 +131,10 @@ class _LoginPageState extends State<LoginPage> {
                   items:
                       roles.map((role) {
                         return DropdownMenuItem(value: role, child: Text(role));
-                      }).toList(),
+                      }
+                      ).toList(),
                   onChanged: (value) {
+                    
                     setState(() {
                       selectedRole = value!;
                     });

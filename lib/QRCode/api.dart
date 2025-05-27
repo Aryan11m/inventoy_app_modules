@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 // import 'package:dio/dio.dart';
 import 'package:inventory_app/QRCode/model.dart/datacontroller.dart';
+import 'package:inventory_app/QRCode/model.dart/getmodel.dart';
 import 'package:inventory_app/QRCode/model.dart/pdf.dart';
 // import 'package:inventory_app/QRCode/model.dart/getmodel.dart';
 
@@ -37,7 +38,7 @@ class _MyWidgetState extends State<MyWidget> {
                 ? Expanded(
                   child: ListView.builder(
                     itemCount:
-                        getDataController.welcome.value.superheros.length,
+                        getDataController.LeaveApproval.value.data.length,
                     itemBuilder: (context, index) {
                       return Card(
                         child: ListTile(
@@ -45,7 +46,7 @@ class _MyWidgetState extends State<MyWidget> {
                           //   borderRadius: BorderRadius.circular(80),
                           //   child: Image.network(
                           //     getDataController
-                          //         .welcome
+                          //         .LeaveApproval
                           //         .value
                           //         .superheros[index]
                           //         .url,
@@ -57,14 +58,14 @@ class _MyWidgetState extends State<MyWidget> {
                           // ),
                           title: Text(
                             getDataController
-                                .welcome
+                                .LeaveApproval
                                 .value
                                 .superheros[index]
                                 .name,
                           ),
                           subtitle: Text(
                             getDataController
-                                .welcome
+                                .LeaveApproval
                                 .value
                                 .superheros[index]
                                 .power,
