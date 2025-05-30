@@ -10,9 +10,7 @@ class Controllers {
       TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  void getDataFromApi() {}
-  // TextEditingController yearController = TextEditingController();
-  // TextEditingController monthController = TextEditingController();
-  // TextEditingController approvalController = TextEditingController();
+  TextEditingController yearController = TextEditingController();
+  TextEditingController monthController = TextEditingController();
+  TextEditingController approvalController = TextEditingController();
 }

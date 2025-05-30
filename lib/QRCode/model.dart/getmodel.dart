@@ -19,7 +19,7 @@ class LeaveApproval {
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
-    data['Message'] = this.message;
+    data['Message'] = message;
     return data;
   }
 }
@@ -106,30 +106,30 @@ class Data {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['LeaveDetailId'] = this.leaveDetailId;
-    data['Empcode'] = this.empcode;
-    data['EmployeeId'] = this.employeeId;
-    data['LeaveRuleId'] = this.leaveRuleId;
-    data['LeaveFromDate'] = this.leaveFromDate;
-    data['LeaveToDate'] = this.leaveToDate;
-    data['Status'] = this.status;
-    data['LeaveName'] = this.leaveName;
-    data['LeaveType'] = this.leaveType;
-    data['HalfDayType'] = this.halfDayType;
-    data['ReasonForLeave'] = this.reasonForLeave;
-    data['AddressForCorrespondence'] = this.addressForCorrespondence;
-    data['ContactNumber'] = this.contactNumber;
-    data['Name'] = this.name;
-    data['Remark'] = this.remark;
-    data['RejectionReason'] = this.rejectionReason;
-    data['FromDate'] = this.fromDate;
-    data['ToDate'] = this.toDate;
-    data['FromTime'] = this.fromTime;
-    data['ToTime'] = this.toTime;
-    data['AbsentDays'] = this.absentDays;
-    data['ValidUptoDate'] = this.validUptoDate;
-    data['LeaveAppliedDate'] = this.leaveAppliedDate;
-    data['IsHrManager'] = this.isHrManager;
+    data['LeaveDetailId'] = leaveDetailId;
+    data['Empcode'] = empcode;
+    data['EmployeeId'] = employeeId;
+    data['LeaveRuleId'] = leaveRuleId;
+    data['LeaveFromDate'] = leaveFromDate;
+    data['LeaveToDate'] = leaveToDate;
+    data['Status'] = status;
+    data['LeaveName'] = leaveName;
+    data['LeaveType'] = leaveType;
+    data['HalfDayType'] = halfDayType;
+    data['ReasonForLeave'] = reasonForLeave;
+    data['AddressForCorrespondence'] = addressForCorrespondence;
+    data['ContactNumber'] = contactNumber;
+    data['Name'] = name;
+    data['Remark'] = remark;
+    data['RejectionReason'] = rejectionReason;
+    data['FromDate'] = fromDate;
+    data['ToDate'] = toDate;
+    data['FromTime'] = fromTime;
+    data['ToTime'] = toTime;
+    data['AbsentDays'] = absentDays;
+    data['ValidUptoDate'] = validUptoDate;
+    data['LeaveAppliedDate'] = leaveAppliedDate;
+    data['IsHrManager'] = isHrManager;
     return data;
   }
 }

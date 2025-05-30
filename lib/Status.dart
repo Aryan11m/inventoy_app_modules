@@ -546,16 +546,15 @@ class _ApprovalState extends State<Approval> {
   }
 }
 */
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:inventory_app/QRCode/model.dart/getmodel.dart';
 import 'package:inventory_app/main.dart';
-import 'package:inventory_app/Controllers.dart';
 import 'package:inventory_app/QRCode/model.dart/datacontroller.dart';
 
-final List<String> years = <String>['2025', '2024', '2023'];
+final List<String> years = <String>['2025', '2024', '2023', '2022'];
 final List<String> months = <String>[
   'January',
   'February',
@@ -570,9 +569,12 @@ final List<String> months = <String>[
   'November',
   'December',
 ];
-final List<String> approvals = <String>['Pending', 'Approved', 'Rejected'];
-
-// final Text = "No Results Found";
+final List<String> approvals = <String>[
+  'All',
+  'Pending',
+  'Approved',
+  'Rejected',
+];
 
 class Approval extends StatefulWidget {
   const Approval({super.key});
@@ -583,18 +585,27 @@ class Approval extends StatefulWidget {
 
 class _ApprovalState extends State<Approval> {
   final getDataController = Get.put(GetDataController());
-  var getControllers = Get.put(Controllers());
+
+  // Initialize with default values
+  String? dropdownValue;
+  String? dropdownValue1;
+  String? dropdownValue2;
 
   @override
   void initState() {
     super.initState();
+
+    final currentDate = DateTime.now();
+    dropdownValue = currentDate.year.toString();
+    dropdownValue1 = DateFormat.LLLL().format(currentDate);
+    dropdownValue2 = 'All';
+
+    // Initialize data controller
     getDataController.getDataFromApi();
     getDataController.testApiMethods();
-  }
 
-  String? dropdownValue;
-  String? dropdownValue1;
-  String? dropdownValue2;
+    _applyFilters();
+  }
 
   // Helper method to convert month name to number
   int _getMonthNumber(String monthName) {
@@ -609,11 +620,9 @@ class _ApprovalState extends State<Approval> {
 
     if (selectedMonth != null) {
       int monthNumber = _getMonthNumber(selectedMonth);
-      // Send month number to API and get filtered data
       getDataController.getDataByMonth(monthNumber);
       _applyFilters();
     } else {
-      // If no month selected, get all data
       getDataController.getDataFromApi();
     }
   }
@@ -626,11 +635,9 @@ class _ApprovalState extends State<Approval> {
 
     if (selectedYear != null) {
       int year = int.parse(selectedYear);
-      // Send year to API and get filtered data
       getDataController.getDataByYear(year);
       _applyFilters();
     } else {
-      // If no year selected, get all data
       getDataController.getDataFromApi();
     }
   }
@@ -642,11 +649,9 @@ class _ApprovalState extends State<Approval> {
     });
 
     if (selectedStatus != null) {
-      // Send status to API and get filtered data
       getDataController.getDataByStatus(selectedStatus);
       _applyFilters();
     } else {
-      // If no status selected, get all data
       getDataController.getDataFromApi();
     }
   }
@@ -669,7 +674,9 @@ class _ApprovalState extends State<Approval> {
 
     if (filters.isNotEmpty) {
       getDataController.getDataWithFilters(filters);
-    } else {}
+    } else {
+      getDataController.getDataFromApi();
+    }
   }
 
   Color _getStatusColor(String status) {
@@ -687,9 +694,6 @@ class _ApprovalState extends State<Approval> {
 
   List<Data> _getFilteredApprovals(List<Data>? apiData) {
     if (apiData == null) return [];
-
-    // Since we're now filtering at API level, we can return the API data directly
-    // or apply additional client-side filtering if needed
     return apiData;
   }
 
@@ -736,16 +740,13 @@ class _ApprovalState extends State<Approval> {
                           ),
                         ),
                       ),
-                      hint: Text(
-                        DateFormat.y().format(DateTime.now()),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
                       value: dropdownValue,
                       elevation: 50,
-                      style: const TextStyle(color: Colors.deepPurple),
+                      style: const TextStyle(
+                        color: Colors.black87,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                       onChanged: _onYearChanged,
                       items:
                           years.map<DropdownMenuItem<String>>((String value) {
@@ -761,7 +762,7 @@ class _ApprovalState extends State<Approval> {
                   ),
                   Container(
                     height: 60,
-                    width: width * 0.40,
+                    width: width * 0.42,
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.circular(10),
@@ -783,18 +784,14 @@ class _ApprovalState extends State<Approval> {
                           ),
                         ),
                       ),
-                      hint: Text(
-                        DateFormat.LLLL().format(DateTime.now()),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
                       value: dropdownValue1,
                       elevation: 16,
-                      style: const TextStyle(color: Colors.deepPurple),
-                      onChanged:
-                          _onMonthChanged, // Updated to use the new method
+                      style: const TextStyle(
+                        color: Colors.black87,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      onChanged: _onMonthChanged,
                       items:
                           months.map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
@@ -811,13 +808,11 @@ class _ApprovalState extends State<Approval> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // Status filter and reset button
             SizedBox(
               height: 55,
               width: width * 1,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
                     height: 60,
@@ -843,20 +838,13 @@ class _ApprovalState extends State<Approval> {
                           ),
                         ),
                       ),
-                      hint: Text(
-                        "All",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
                       value: dropdownValue2,
                       style: const TextStyle(
-                        color: Colors.black,
+                        color: Colors.black87,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                       onChanged: _onStatusChanged,
-                      // Updated to use the new method
                       items:
                           approvals.map<DropdownMenuItem<String>>((
                             String value,
@@ -871,32 +859,35 @@ class _ApprovalState extends State<Approval> {
                           }).toList(),
                     ),
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 15,
+                  SizedBox(width: width * 0.10),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.all(15),
+                        // elevation: 15,
+                        backgroundColor: Colors.blue[300],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
                       ),
-                      elevation: 15,
-                      backgroundColor: Colors.blue[300],
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        dropdownValue = null;
-                        dropdownValue1 = null;
-                        dropdownValue2 = null;
-                      });
-                      // Reset filters and get all data from API
-                      getDataController.getDataFromApi();
-                    },
-                    child: Text(
-                      'Reset Filters',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
+                      onPressed: () {
+                        final currentDate = DateTime.now();
+                        setState(() {
+                          dropdownValue = currentDate.year.toString();
+                          dropdownValue1 = DateFormat.LLLL().format(
+                            currentDate,
+                          );
+                          dropdownValue2 = 'All';
+                        });
+                        _applyFilters();
+                      },
+                      child: Text(
+                        'Reset Filters',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ),
@@ -904,35 +895,15 @@ class _ApprovalState extends State<Approval> {
               ),
             ),
             SizedBox(height: 30),
-            // ElevatedButton(
-            //   style: ElevatedButton.styleFrom(
-            //     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            //     elevation: 15,
-            //     backgroundColor: Colors.blue[300],
-            //     shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.all(Radius.circular(10)),
-            //     ),
-            //   ),
-            //   onPressed: () {
-            //     _applyFilters();
-            //   },
-            //   child: Text(
-            //     'Apply Filters',
-            //     style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-            //   ),
-            // ),
-
             // Display API data
-            Flexible(
+            Expanded(
               child: Obx(() {
                 if (getDataController.isLoading.value) {
                   return Center(child: CircularProgressIndicator());
                 }
-
                 final filteredApprovals = _getFilteredApprovals(
                   getDataController.welcome.value.data,
                 );
-
                 if (filteredApprovals.isEmpty) {
                   return Center(
                     child: Text(
@@ -944,7 +915,6 @@ class _ApprovalState extends State<Approval> {
                     ),
                   );
                 }
-
                 return ListView.builder(
                   physics: BouncingScrollPhysics(),
                   padding: const EdgeInsets.fromLTRB(50, 30, 8, 0),
@@ -953,20 +923,19 @@ class _ApprovalState extends State<Approval> {
                     final leaveData = filteredApprovals[index];
                     final status = leaveData.status ?? 'Unknown';
                     final statusColor = _getStatusColor(status);
-
                     // Format dates for display
-                    String displayYear = '';
+                    // String displayYear = '';
                     String displayMonth = '';
                     if (leaveData.leaveFromDate != null) {
                       try {
                         DateTime date = DateTime.parse(
                           leaveData.leaveFromDate!,
                         );
-                        displayYear = date.year.toString();
+                        // displayYear = date.year.toString();
                         displayMonth = DateFormat.LLLL().format(date);
                       } catch (e) {
-                        displayYear = 'N/A';
-                        displayMonth = 'N/A';
+                        // displayYear = dropdownValue ?? 'N/A';
+                        displayMonth = dropdownValue1 ?? 'N/A';
                       }
                     }
 
@@ -1075,15 +1044,13 @@ class _ApprovalState extends State<Approval> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Center(
-                                    child: Flexible(
-                                      child: Text(
-                                        status,
-                                        style: TextStyle(
-                                          overflow: TextOverflow.visible,
-                                          fontSize: 13,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                    child: Text(
+                                      status,
+                                      style: TextStyle(
+                                        overflow: TextOverflow.visible,
+                                        fontSize: 13,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ),

@@ -11,7 +11,9 @@ class GetDataController extends GetxController {
   var errorMessage = ''.obs;
 
   // Method to call API with fixed payload
-  getDataFromApi({String status = "Rejected"}) async {
+  getDataFromApi(
+    // {String status = "Pending"}
+  ) async {
     isLoading.value = true;
     errorMessage.value = '';
 
@@ -31,18 +33,18 @@ class GetDataController extends GetxController {
         'Accept': 'application/json',
       };
 
-      var requestData = {
-        "EmpCode": "1300001",
-        "Status": status,
-        "IsManager": "0",
-        "Month": "5",
-        "Year": "2025",
-      };
+      // var requestData = {
+      //   "EmpCode": "1300001",
+      //   "Status": status,
+      //   "IsManager": "0",
+      //   "Month": "5",
+      //   "Year": "2025",
+      // };
 
       var response = await dioClient.post(
         'https://myhrms.oriole.co.in/api/ApproveLeaveIonic/ApproveLeave',
         options: dio.Options(headers: headers),
-        data: requestData,
+        // data: requestData,
       );
 
       if (response.statusCode == 200) {
@@ -185,11 +187,11 @@ class GetDataController extends GetxController {
                 headers: {'Content-Type': 'application/json'},
               ),
               data: {
-                // "EmpCode": "1300001",
-                // "Status": "Pending",
-                // "IsManager": "0",
-                // "Month": "5",
-                // "Year": "2025",
+                "EmpCode": "1300001",
+                "Status": "Pending",
+                "IsManager": "0",
+                "Month": "5",
+                "Year": "2025",
               },
             );
             break;
