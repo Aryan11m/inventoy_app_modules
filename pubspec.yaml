@@ -51,6 +51,11 @@ dependencies:
   pdf_compressor: 
   simple_gradient_text: 
   intl: ^0.20.2
+  razorpay_flutter: ^1.4.0
+  flutter_dotenv: ^5.2.1
+  fluttertoast: 
+  
+
   
 dev_dependencies:
   flutter_test:

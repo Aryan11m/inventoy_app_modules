@@ -591,6 +591,8 @@ class _ApprovalState extends State<Approval> {
   String? dropdownValue1;
   String? dropdownValue2;
 
+  Future<List<Data>>? _dataFuture;
+
   @override
   void initState() {
     super.initState();
@@ -605,6 +607,33 @@ class _ApprovalState extends State<Approval> {
     getDataController.testApiMethods();
 
     _applyFilters();
+  }
+
+  TimeOfDay _inTime = TimeOfDay(hour: 7, minute: 15);
+  TimeOfDay _outTime = TimeOfDay(hour: 7, minute: 15);
+
+  void _selectInTime() async {
+    final TimeOfDay? newTime = await showTimePicker(
+      context: context,
+      initialTime: _inTime,
+    );
+    if (newTime != null) {
+      setState(() {
+        _inTime = newTime;
+      });
+    }
+  }
+
+  void _selectOutTime() async {
+    final TimeOfDay? newTime = await showTimePicker(
+      context: context,
+      initialTime: _outTime,
+    );
+    if (newTime != null) {
+      setState(() {
+        _outTime = newTime;
+      });
+    }
   }
 
   // Helper method to convert month name to number
@@ -624,6 +653,7 @@ class _ApprovalState extends State<Approval> {
       _applyFilters();
     } else {
       getDataController.getDataFromApi();
+      _applyFilters();
     }
   }
 
@@ -639,6 +669,7 @@ class _ApprovalState extends State<Approval> {
       _applyFilters();
     } else {
       getDataController.getDataFromApi();
+      _applyFilters();
     }
   }
 
@@ -653,11 +684,11 @@ class _ApprovalState extends State<Approval> {
       _applyFilters();
     } else {
       getDataController.getDataFromApi();
+      _applyFilters();
     }
   }
 
-  // Method to apply combined filters
-  void _applyFilters() {
+  Future<List<Data>> _getFilteredData() async {
     Map<String, dynamic> filters = {};
 
     if (dropdownValue != null) {
@@ -673,10 +704,17 @@ class _ApprovalState extends State<Approval> {
     }
 
     if (filters.isNotEmpty) {
-      getDataController.getDataWithFilters(filters);
+      await getDataController.getDataWithFilters(filters);
     } else {
-      getDataController.getDataFromApi();
+      await getDataController.getDataFromApi();
     }
+    return getDataController.welcome.value.data ?? [];
+  }
+
+  void _applyFilters() {
+    setState(() {
+      _dataFuture = _getFilteredData();
+    });
   }
 
   Color _getStatusColor(String status) {
@@ -692,10 +730,10 @@ class _ApprovalState extends State<Approval> {
     }
   }
 
-  List<Data> _getFilteredApprovals(List<Data>? apiData) {
-    if (apiData == null) return [];
-    return apiData;
-  }
+  // List<Data> _getFilteredApprovals(List<Data>? apiData) {
+  //   if (apiData == null) return [];
+  //   return apiData;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -897,205 +935,280 @@ class _ApprovalState extends State<Approval> {
             SizedBox(height: 30),
             // Display API data
             Expanded(
-              child: Obx(() {
-                if (getDataController.isLoading.value) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                final filteredApprovals = _getFilteredApprovals(
-                  getDataController.welcome.value.data,
-                );
-                if (filteredApprovals.isEmpty) {
-                  return Center(
-                    child: Text(
-                      'No Results',
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  );
-                }
-                return ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  padding: const EdgeInsets.fromLTRB(50, 30, 8, 0),
-                  itemCount: filteredApprovals.length,
-                  itemBuilder: (context, index) {
-                    final leaveData = filteredApprovals[index];
-                    final status = leaveData.status ?? 'Unknown';
-                    final statusColor = _getStatusColor(status);
-                    // Format dates for display
-                    // String displayYear = '';
-                    String displayMonth = '';
-                    if (leaveData.leaveFromDate != null) {
-                      try {
-                        DateTime date = DateTime.parse(
-                          leaveData.leaveFromDate!,
-                        );
-                        // displayYear = date.year.toString();
-                        displayMonth = DateFormat.LLLL().format(date);
-                      } catch (e) {
-                        // displayYear = dropdownValue ?? 'N/A';
-                        displayMonth = dropdownValue1 ?? 'N/A';
-                      }
-                    }
-
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: 36),
-                      child: SizedBox(
-                        height: height * 0.25,
-                        width: width * 0.95,
-                        child: Stack(
-                          fit: StackFit.expand,
-                          clipBehavior: Clip.none,
-                          children: [
-                            Container(
-                              height: height * 0.30,
-                              width: width * 0.95,
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: statusColor,
-                                  width: 2,
-                                ),
-                                borderRadius: BorderRadius.circular(30),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color.fromARGB(
-                                      255,
-                                      97,
-                                      99,
-                                      82,
-                                    ),
-                                    offset: const Offset(3.0, 3.0),
-                                    blurRadius: 6.0,
-                                    spreadRadius: 2.0,
-                                  ),
-                                  BoxShadow(
-                                    color: const Color.fromARGB(
-                                      255,
-                                      250,
-                                      249,
-                                      249,
-                                    ),
-                                    offset: const Offset(0.0, 0.0),
-                                    blurRadius: 0.0,
-                                    spreadRadius: 0.0,
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.topRight,
-                                    child: Text(
-                                      '${leaveData.leaveDetailId ?? 'N/A'}',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    leaveData.name ?? 'N/A',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    displayMonth,
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                  SizedBox(height: 10),
-                                  Text(
-                                    leaveData.leaveName ?? 'N/A',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  if (status.toLowerCase() == 'rejected' &&
-                                      leaveData.rejectionReason != null)
-                                    Align(
-                                      alignment: Alignment.bottomCenter,
-                                      child: Text(
-                                        'Reason: ${leaveData.rejectionReason}',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                        ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                            Positioned(
-                              left: -48,
-                              top: 20,
-                              child: Container(
-                                height: 55,
-                                width: 105,
-                                decoration: BoxDecoration(
-                                  color: statusColor,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Center(
-                                    child: Text(
-                                      status,
-                                      style: TextStyle(
-                                        overflow: TextOverflow.visible,
-                                        fontSize: 13,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              left: -48,
-                              top: 90,
-                              child: Container(
-                                height: 35,
-                                width: 105,
-                                decoration: BoxDecoration(
-                                  color: const Color.fromARGB(
-                                    255,
-                                    199,
-                                    209,
-                                    228,
-                                  ),
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    leaveData.leaveType ?? 'N/A',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      color: const Color.fromARGB(
-                                        255,
-                                        90,
-                                        51,
-                                        51,
-                                      ),
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+              child: FutureBuilder(
+                future: _dataFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        'Error: ${snapshot.error}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 26,
                         ),
                       ),
                     );
-                  },
-                );
-              }),
+                  }
+                  final filteredApprovals = snapshot.data ?? [];
+                  if (filteredApprovals.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No Results',
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
+                  }
+
+                  return ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(50, 30, 8, 0),
+                    itemCount: filteredApprovals.length,
+                    itemBuilder: (context, index) {
+                      final leaveData = filteredApprovals[index];
+                      final status = leaveData.status ?? 'Unknown';
+                      final statusColor = _getStatusColor(status);
+                      // Format dates for display
+                      // String displayYear = '';
+                      String displayMonth = '';
+                      if (leaveData.leaveFromDate != null) {
+                        try {
+                          DateTime date = DateTime.parse(
+                            leaveData.leaveFromDate!,
+                          );
+                          // displayYear = date.year.toString();
+                          displayMonth = DateFormat.LLLL().format(date);
+                        } catch (e) {
+                          // displayYear = dropdownValue ?? 'N/A';
+                          displayMonth = dropdownValue1 ?? 'N/A';
+                        }
+                      }
+
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 36),
+                        child: SizedBox(
+                          height: height * 0.38,
+                          width: width * 0.95,
+                          child: Stack(
+                            fit: StackFit.expand,
+                            clipBehavior: Clip.none,
+                            children: [
+                              Container(
+                                height: height * 0.35,
+                                width: width * 0.95,
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: statusColor,
+                                    width: 2,
+                                  ),
+                                  borderRadius: BorderRadius.circular(30),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color.fromARGB(
+                                        255,
+                                        97,
+                                        99,
+                                        82,
+                                      ),
+                                      offset: const Offset(3.0, 3.0),
+                                      blurRadius: 6.0,
+                                      spreadRadius: 2.0,
+                                    ),
+                                    BoxShadow(
+                                      color: const Color.fromARGB(
+                                        255,
+                                        250,
+                                        249,
+                                        249,
+                                      ),
+                                      offset: const Offset(0.0, 0.0),
+                                      blurRadius: 0.0,
+                                      spreadRadius: 0.0,
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: Text(
+                                        '${leaveData.leaveDetailId ?? 'N/A'}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      leaveData.name ?? 'N/A',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      displayMonth,
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    SizedBox(height: 39),
+                                    Row(
+                                      children: [
+                                        // In-time section
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'New In-time',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            TextButton.icon(
+                                              onPressed: _selectInTime,
+                                              icon: Icon(
+                                                Icons.access_time,
+                                                color: Colors.black,
+                                              ),
+                                              label: Text(
+                                                _inTime.format(context),
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        // Out-time section
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'New Out-time',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            
+                                            TextButton.icon(
+                                              onPressed: _selectOutTime,
+                                              icon: Icon(
+                                                Icons.access_time,
+                                                color: Colors.black,
+                                              ),
+                                              label: Text(
+                                                _outTime.format(context),
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      leaveData.leaveName ?? 'N/A',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    if (status.toLowerCase() == 'rejected' &&
+                                        leaveData.rejectionReason != null)
+                                      Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Text(
+                                          'Reason: ${leaveData.rejectionReason}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                left: -48,
+                                top: 20,
+                                child: Container(
+                                  height: 55,
+                                  width: 105,
+                                  decoration: BoxDecoration(
+                                    color: statusColor,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Center(
+                                      child: Text(
+                                        status,
+                                        style: TextStyle(
+                                          overflow: TextOverflow.visible,
+                                          fontSize: 13,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                left: -48,
+                                top: 90,
+                                child: Container(
+                                  height: 35,
+                                  width: 105,
+                                  decoration: BoxDecoration(
+                                    color: const Color.fromARGB(
+                                      255,
+                                      199,
+                                      209,
+                                      228,
+                                    ),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      leaveData.leaveType ?? 'N/A',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: const Color.fromARGB(
+                                          255,
+                                          90,
+                                          51,
+                                          51,
+                                        ),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),

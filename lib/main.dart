@@ -2,6 +2,7 @@
 
 // import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
 // import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:inventory_app/Login/Registration/login1.dart';
@@ -15,26 +16,23 @@ dynamic height, width;
 void main() async {
   await Hive.initFlutter();
   await Hive.openBox('logindata');
-  // Add a new authentication box for storing login state
   await Hive.openBox('authBox');
   // Ensure that plugin services are initialized so that `availableCameras()`
   // can be called before `runApp()`
   // WidgetsFlutterBinding.ensureInitialized();
-
   // Obtain a list of the available cameras on the device.
   // final cameras = await availableCameras();
-
   // Get a specific camera from the list of available cameras.
   // final firstCamera = cameras.first;
+  // dotenv.load(fileName: "lib/.env");
+  // WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
-
 // class Roles {
 //   final String emailid;
 //   final String srole;
 //   const Roles(this.emailid, this.srole);
 // }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
