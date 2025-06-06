@@ -1,4 +1,3 @@
-/*
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
@@ -453,7 +452,7 @@ class _Subscription1State extends State<Subscription1> {
           if (isPopular)
             Positioned(
               top: -8,
-              right: 20,
+              left: 20,
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -572,7 +571,8 @@ class _Subscription1State extends State<Subscription1> {
     }
   }
 }
-*/
+
+/*
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
@@ -819,7 +819,6 @@ class _Subscription1State extends State<Subscription1> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     try {
       razorpay.clear();
@@ -828,3 +827,4 @@ class _Subscription1State extends State<Subscription1> {
     }
   }
 }
+*/

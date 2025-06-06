@@ -739,8 +739,20 @@ class _ApprovalState extends State<Approval> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Approval', style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.amberAccent,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        title: Text(
+          'Approval',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -749,13 +761,15 @@ class _ApprovalState extends State<Approval> {
           children: [
             // Filter dropdowns
             SizedBox(
-              height: 55,
+              // height: 55,
+              height: height * 0.082,
               width: width * 1,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    height: 60,
+                    // height: 60,
+                    height: height * 0.08,
                     width: width * 0.40,
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
@@ -799,7 +813,9 @@ class _ApprovalState extends State<Approval> {
                     ),
                   ),
                   Container(
-                    height: 60,
+                    // height: 60,
+                    height: height * 0.08,
+
                     width: width * 0.42,
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
@@ -847,13 +863,16 @@ class _ApprovalState extends State<Approval> {
             ),
             const SizedBox(height: 20),
             SizedBox(
-              height: 55,
+              // height: 55,
+              height: height * 0.08,
+
               width: width * 1,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    height: 60,
+                    // height: 60,
+                    height: height * 0.08,
                     width: width * 0.40,
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
@@ -897,16 +916,28 @@ class _ApprovalState extends State<Approval> {
                           }).toList(),
                     ),
                   ),
-                  SizedBox(width: width * 0.10),
-                  Expanded(
-                    child: ElevatedButton(
+                  // SizedBox(width: width * 0.10),
+                  Container(
+                    // height: height * 0.063,
+                    height: 60,
+                    width: width * 0.42,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                      ),
+                    ),
+                    child: ElevatedButton.icon(
+                      icon: Icon(Icons.refresh, color: Colors.white),
                       style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.all(15),
+                        padding: EdgeInsets.all(4),
                         // elevation: 15,
-                        backgroundColor: Colors.blue[300],
+                        backgroundColor: Colors.transparent,
+
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
+                        shadowColor: Colors.transparent,
                       ),
                       onPressed: () {
                         final currentDate = DateTime.now();
@@ -919,12 +950,12 @@ class _ApprovalState extends State<Approval> {
                         });
                         _applyFilters();
                       },
-                      child: Text(
+                      label: Text(
                         'Reset Filters',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: const Color.fromARGB(255, 250, 248, 248),
                         ),
                       ),
                     ),
@@ -1098,7 +1129,7 @@ class _ApprovalState extends State<Approval> {
                                                 fontSize: 14,
                                               ),
                                             ),
-                                            
+
                                             TextButton.icon(
                                               onPressed: _selectOutTime,
                                               icon: Icon(
@@ -1147,8 +1178,11 @@ class _ApprovalState extends State<Approval> {
                                 left: -48,
                                 top: 20,
                                 child: Container(
-                                  height: 55,
-                                  width: 105,
+                                  // height: 55,
+                                  height: height * 0.08,
+
+                                  // width: 105,
+                                  width: width * 0.29,
                                   decoration: BoxDecoration(
                                     color: statusColor,
                                     borderRadius: BorderRadius.circular(10),
@@ -1173,8 +1207,10 @@ class _ApprovalState extends State<Approval> {
                                 left: -48,
                                 top: 90,
                                 child: Container(
-                                  height: 35,
-                                  width: 105,
+                                  // height: 35,
+                                  height: height * 0.051,
+                                  // width: 105,
+                                  width: width * 0.29,
                                   decoration: BoxDecoration(
                                     color: const Color.fromARGB(
                                       255,

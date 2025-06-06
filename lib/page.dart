@@ -1,4 +1,3 @@
-/*
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -51,7 +50,8 @@ class _MyHomePageState extends State<MyHomePage> {
     Color color,
   ) {
     return Container(
-      width: 100,
+      // width: 100,
+      width: width * 0.24,
       margin: const EdgeInsets.only(right: 16),
       child: GestureDetector(
         onTap: () => Get.to(() => page),
@@ -100,8 +100,10 @@ class _MyHomePageState extends State<MyHomePage> {
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: Container(
-          width: 40,
-          height: 40,
+          // width: 40,
+          width: width * 0.098,
+          // height: 40,
+          height: height * 0.045,
           decoration: BoxDecoration(
             color: const Color(0xFF6366F1),
             borderRadius: BorderRadius.circular(8),
@@ -276,8 +278,8 @@ class _MyHomePageState extends State<MyHomePage> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: ListView(
+            // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Enhanced Products Section
               Container(
@@ -323,7 +325,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     const SizedBox(height: 16),
                     SizedBox(
-                      height: 120,
+                      // height: 120,
+                      height: height * 0.132,
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: [
@@ -425,47 +428,50 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 20),
 
               // Enhanced Tasks List
-              Flexible(
-                child: Container(
-                  height: height * 0.39,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    itemCount:
-                        _tasks
-                            .where(
-                              (task) => task.toLowerCase().contains(
-                                controller.text.toLowerCase(),
-                              ),
-                            )
-                            .length,
-                    itemBuilder: (context, index) {
-                      final filteredTasks =
+              LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  return Container(
+                    height: height * 0.39,
+                    // height: constraints.maxHeight * 0.3,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount:
                           _tasks
                               .where(
                                 (task) => task.toLowerCase().contains(
                                   controller.text.toLowerCase(),
                                 ),
                               )
-                              .toList();
-                      final task = filteredTasks[index];
-                      return _buildEnhancedTaskCard(task, index);
-                    },
-                  ),
-                ),
+                              .length,
+                      itemBuilder: (context, index) {
+                        final filteredTasks =
+                            _tasks
+                                .where(
+                                  (task) => task.toLowerCase().contains(
+                                    controller.text.toLowerCase(),
+                                  ),
+                                )
+                                .toList();
+                        final task = filteredTasks[index];
+                        return _buildEnhancedTaskCard(task, index);
+                      },
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -474,8 +480,11 @@ class _MyHomePageState extends State<MyHomePage> {
       drawer: Drawer(
         child: Column(
           children: [
+            SizedBox(height: 20),
             Container(
-              height: 200,
+              // height: 200,
+              height: height * 0.24,
+              width: width * 1,
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
@@ -518,6 +527,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
+            SizedBox(height: 20),
             Expanded(
               child: ListView(
                 padding: EdgeInsets.zero,
@@ -620,7 +630,8 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-*/
+
+/*
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -1007,3 +1018,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+*/
