@@ -59,7 +59,8 @@ class _Subscription1State extends State<Subscription1> {
     authBox.flush();
     setState(() {
       isSubscribed = true;
-    });
+    }
+  );
     print("Subscribed, status set to: ${authBox.get('status')}"); // Debug print
   }
 
@@ -70,10 +71,10 @@ class _Subscription1State extends State<Subscription1> {
     authBox.flush();
     setState(() {
       isSubscribed = false;
-    });
+    }
+  );
     print("Canceled, status set to: ${authBox.get('status')}"); // Debug print
   }
-
   @override
   Widget build(BuildContext context) {
     razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
@@ -173,18 +174,14 @@ class _Subscription1State extends State<Subscription1> {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 24),
-
                 // Subscription Plans
                 ...subscriptionPlans.asMap().entries.map((entry) {
                   int index = entry.key;
                   Map<String, dynamic> plan = entry.value;
                   return _buildPremiumPlanCard(plan, index);
                 }).toList(),
-
                 const SizedBox(height: 24),
-
                 // Cancel Button
                 Container(
                   width: double.infinity,
@@ -233,7 +230,6 @@ class _Subscription1State extends State<Subscription1> {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 20),
               ],
             ),
