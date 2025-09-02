@@ -42,7 +42,7 @@ class GetDataController extends GetxController {
       // };
 
       var response = await dioClient.post(
-        'https://myhrms.oriole.co.in/api/ApproveLeaveIonic/ApproveLeave',
+        '',
         options: dio.Options(headers: headers),
         // data: requestData,
       );
@@ -70,7 +70,7 @@ class GetDataController extends GetxController {
       // Replace with your actual API endpoint
       var response = await http.post(
         Uri.parse(
-          'https://myhrms.oriole.co.in/api/ApproveLeaveIonic/ApproveLeave',
+          '',
         ),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'month': monthNumber}),
@@ -97,7 +97,7 @@ class GetDataController extends GetxController {
 
       var response = await http.post(
         Uri.parse(
-          'https://myhrms.oriole.co.in/api/ApproveLeaveIonic/ApproveLeave',
+          '',
         ),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'year': year}),
@@ -121,7 +121,7 @@ class GetDataController extends GetxController {
 
       var response = await http.post(
         Uri.parse(
-          'https://myhrms.oriole.co.in/api/ApproveLeaveIonic/ApproveLeave',
+          '',
         ),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'status': status}),
@@ -145,7 +145,7 @@ class GetDataController extends GetxController {
 
       var response = await http.post(
         Uri.parse(
-          'https://myhrms.oriole.co.in/api/ApproveLeaveIonic/ApproveLeave',
+          '',
         ),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(filters),
@@ -176,13 +176,13 @@ class GetDataController extends GetxController {
         switch (method) {
           case 'GET':
             response = await dioClient.get(
-              'https://myhrms.oriole.co.in/api/ApproveLeaveIonic/ApproveLeave',
+              '',
               options: dio.Options(headers: {'Accept': 'application/json'}),
             );
             break;
           case 'POST':
             response = await dioClient.post(
-              'https://myhrms.oriole.co.in/api/ApproveLeaveIonic/ApproveLeave',
+              '',
               options: dio.Options(
                 headers: {'Content-Type': 'application/json'},
               ),
@@ -197,7 +197,7 @@ class GetDataController extends GetxController {
             break;
           case 'PUT':
             response = await dioClient.put(
-              'https://myhrms.oriole.co.in/api/ApproveLeaveIonic/ApproveLeave',
+              '',
               options: dio.Options(
                 headers: {'Content-Type': 'application/json'},
               ),
